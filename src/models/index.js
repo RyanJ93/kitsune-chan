@@ -1,3 +1,6 @@
 'use strict';
 
-module.exports = {};
+module.exports = {
+    GuildConfig: require('./GuildConfig'),
+    Model: require('./Model')
+};

@@ -2,5 +2,7 @@
 
 module.exports = {
     bot: require('./bot'),
-    web: require('./web')
+    web: require('./web'),
+    DatabaseProvider: require('./DatabaseProvider'),
+    LoggerProvider: require('./LoggerProvider')
 };

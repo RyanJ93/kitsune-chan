@@ -1,5 +1,5 @@
 {
-  "name": "bot",
+  "name": "kitsune-chan",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,6 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@lala.js/core": "github:RyanJ93/lala.js"
+    "@lala.js/core": "github:RyanJ93/lala.js",
+    "@sentry/node": "^6.2.1",
+    "discord.js": "^12.5.1",
+    "mongodb": "^3.6.4"
   }
 }
