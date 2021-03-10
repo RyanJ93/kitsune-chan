@@ -1,5 +1,6 @@
 'use strict';
 
+const lala = require('@lala.js/core');
 const Model = require('./Model');
 const Database = require('../support/Database');
 
@@ -26,6 +27,9 @@ class GuildConfig extends Model {
     }
 
     setGuildID(guildID){
+        if ( guildID === '' || typeof guildID !== 'string' ){
+            throw new lala.InvalidArgumentException('Invalid guild ID.', 1);
+        }
         this._guildID = guildID;
         return this;
     }
@@ -35,6 +39,9 @@ class GuildConfig extends Model {
     }
 
     setPrefix(prefix){
+        if ( prefix === '' || typeof prefix !== 'string' ){
+            throw new lala.InvalidArgumentException('Invalid prefix.', 1);
+        }
         this._prefix = prefix;
         return this;
     }
@@ -62,6 +69,12 @@ class GuildConfig extends Model {
             }
         }, {
             upsert: true
+        });
+    }
+
+    async delete(){
+        await Database.getConnection().collection('guilds').deleteOne({
+            guildID: this._guildID
         });
     }
 }
