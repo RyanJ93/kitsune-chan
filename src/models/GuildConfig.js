@@ -6,7 +6,7 @@ const Database = require('../support/Database');
 
 class GuildConfig extends Model {
     _guildID = null;
-    _prefix = '?';
+    _prefix = GuildConfig.DEFAULT_PREFIX;
 
     static async find(guildID){
         let guildConfig = null;
@@ -78,5 +78,10 @@ class GuildConfig extends Model {
         });
     }
 }
+
+Object.defineProperty(GuildConfig, 'DEFAULT_PREFIX', {
+    value: '?',
+    writable: false
+});
 
 module.exports = GuildConfig;
