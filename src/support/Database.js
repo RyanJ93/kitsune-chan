@@ -16,7 +16,7 @@ class Database {
 
     static async _ensureIndexes(){
         const processes = [];
-        processes.push(Database._connection.collection('guilds').createIndex({ guildID: 1 }, { unique: true }));
+        processes.push(Database._connection.collection('guildsConfig').createIndex({ guildID: 1 }, { unique: true }));
         await Promise.all(processes);
     }
 

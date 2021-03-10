@@ -10,7 +10,7 @@ class GuildConfig extends Model {
 
     static async find(guildID){
         let guildConfig = null;
-        const properties = await Database.getConnection().collection('guilds').findOne({
+        const properties = await Database.getConnection().collection('guildsConfig').findOne({
             guildID: guildID
         });
         if ( properties !== null ){
@@ -61,7 +61,7 @@ class GuildConfig extends Model {
     }
 
     async save(){
-        await Database.getConnection().collection('guilds').updateOne({
+        await Database.getConnection().collection('guildsConfig').updateOne({
             guildID: this._guildID
         }, {
             $set: {
@@ -73,7 +73,7 @@ class GuildConfig extends Model {
     }
 
     async delete(){
-        await Database.getConnection().collection('guilds').deleteOne({
+        await Database.getConnection().collection('guildsConfig').deleteOne({
             guildID: this._guildID
         });
     }
