@@ -5,8 +5,10 @@ const providers = require('./src/Providers');
 
 lala.init({
     providers: [
-        providers.DatabaseProvider,
         providers.LoggerProvider,
+        providers.DatabaseProvider,
+        providers.CacheProvider,
+        providers.LocaleProvider,
         providers.bot.BotProvider,
         providers.bot.ChatProvider
     ]
