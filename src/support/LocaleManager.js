@@ -55,26 +55,38 @@ class LocaleManager {
     }
 
     static getLabelTranslations(key){
+        const localeCache = lala.CacheRepository.get('localeCache');
         const keys = LocaleManager.#locales.map((locale) => { return locale + '.' + key });
         return localeCache.getMulti(keys, {
             silent: true
         });
     }
 
-    static getLabelTranslationsMulti(keys){
-        const keyList = [];
+    static async getLabelTranslationsMulti(keys){
+        const localeCache = lala.CacheRepository.get('localeCache'), keyList = [], labels = {};
         LocaleManager.#locales.forEach((locale) => { 
             const additionalKeys = keys.map((key) => { return locale + '.' + key });
             keyList.push(...additionalKeys);
         });
-        return localeCache.getMulti(keyList, {
+        const entries = await localeCache.getMulti(keyList, {
             silent: true
         });
+        for( const key in entries ){
+            const index = key.indexOf('.');
+            if ( index > 0 ){
+                const labelKey = key.substr(index + 1);
+                if ( !labels.hasOwnProperty(labelKey) ){
+                    labels[labelKey] = {};
+                }
+                labels[labelKey][key.substr(0, index)] = entries[key];
+            }
+        }
+        return labels;
     }
 }
 
 Object.defineProperty(LocaleManager, 'LOCALE_PACKAGE_PATH', {
-    value: '../../drive/assets/locales/',
+    value: '../../assets/locales/',
     writable: false
 });
 

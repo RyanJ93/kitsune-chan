@@ -9,6 +9,9 @@ class GuildConfig extends Model {
     _prefix = GuildConfig.DEFAULT_PREFIX;
 
     static async find(guildID){
+        if ( guildID === '' || typeof guildID !== 'string' ){
+            throw new lala.InvalidArgumentException('Invalid guild ID.', 1);
+        }
         let guildConfig = null;
         const properties = await Database.getConnection().collection('guildsConfig').findOne({
             guildID: guildID

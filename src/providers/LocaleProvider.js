@@ -5,7 +5,7 @@ const LocaleManager = require('../support/LocaleManager');
 
 class LocaleProvider extends lala.Provider {
     static async setup(){
-        LocaleManager.setAvailableLocales(['it']);
+        LocaleManager.setAvailableLocales(['it', 'en']);
         await LocaleManager.loadLabels();
     }
 }
