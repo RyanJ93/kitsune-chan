@@ -14,7 +14,7 @@ class GuildConfig extends Model {
             guildID: guildID
         });
         if ( properties !== null ){
-            guildConfig = new GuildConfig();
+            guildConfig = new GuildConfig(guildID);
             guildConfig.setProperties(properties);
         }
         return guildConfig;
