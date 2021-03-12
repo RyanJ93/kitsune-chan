@@ -1,5 +1,6 @@
 'use strict';
 
+const lala = require('@lala.js/core');
 const LocaleManager = require('../../support/LocaleManager');
 
 class BotController {
@@ -7,6 +8,13 @@ class BotController {
     _guildConfig = null;
     _message = null;
     _locale =  null;
+
+    async _reply(message){
+        if ( message === '' || typeof message !== 'string' ){
+            throw new lala.InvalidArgumentException('Invalid message.', 1);
+        }
+        await await this._message.channel.send(message);
+    }
 
     constructor(client, guildConfig, message){
         this._client = client;
