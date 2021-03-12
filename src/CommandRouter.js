@@ -2,6 +2,7 @@
 
 const GuildConfig = require('./models/GuildConfig');
 const BotException = require('./exceptions/BotException');
+const LocaleManager = require('./support/LocaleManager');
 
 class CommandRouter {
     static #client = null;
@@ -32,6 +33,10 @@ class CommandRouter {
                 const commandName = end === -1 ? message.content.substr(start) : message.content.substr(start, end - 1);
                 const command = CommandRouter.#commands.get(commandName);
                 if ( typeof command !== 'undefined' ){
+                    if ( command.adminRequired && !message.member.hasPermission("ADMINISTRATOR") ){
+                        await message.channel.send(LocaleManager.getLabel('common.adminRequired'));
+                        return;
+                    }
                     message.cleanedContent = message.content.substr(start + commandName.length + 1);
                     const controller = new command.controller(CommandRouter.#client, guildConfig, message);
                     controller[command.method]().catch((ex) => {
@@ -57,10 +62,11 @@ class CommandRouter {
         return CommandRouter.#client;
     }
 
-    static registerCommand(command, controller, method){
+    static registerCommand(command, controller, method, adminRequired = false){
         CommandRouter.#commands.set(command, {
             controller: controller,
-            method: method
+            method: method,
+            adminRequired: ( adminRequired === true )
         });
     }
 

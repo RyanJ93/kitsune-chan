@@ -2,6 +2,7 @@
     "locale": "it",
     "roles": ["it", "italian", "italiano"],
     "labels": {
+        "common.adminRequired": "Non hai i permessi per utilizzare questo comando, solo gli amministratori possono usarlo.",
         "help.chat.say": "Invia un messaggio con il testo inserito.",
         "help.chat.help": "Mostra le funzionalità disponibili.",
         "chat.help.commandNotFound": "Mi dispiace, non trovo questo comando."

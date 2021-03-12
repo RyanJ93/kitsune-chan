@@ -2,6 +2,7 @@
     "locale": "en",
     "roles": ["en", "english"],
     "labels": {
+        "common.adminRequired": "You don't have the permission to issue this command, it can be used by admins only.",
         "help.chat.say": "Sends a message containing the provided text.",
         "help.chat.help": "Displays all the available features.",
         "chat.help.commandNotFound": "I'm sorry, this command doesn't exist."
