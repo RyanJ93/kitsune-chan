@@ -1,4 +1,9 @@
 {
-    "help.chat.say": "Sends a message containing the provided text.",
-    "help.chat.help": "Displays all the available features."
+    "locale": "en",
+    "roles": ["en", "english"],
+    "labels": {
+        "help.chat.say": "Sends a message containing the provided text.",
+        "help.chat.help": "Displays all the available features.",
+        "chat.help.commandNotFound": "I'm sorry, this command doesn't exist."
+    }
 }

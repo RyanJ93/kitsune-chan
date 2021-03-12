@@ -8,7 +8,7 @@ const LocaleManager = require('../../support/LocaleManager');
 
 class ChatProvider extends lala.Provider {
     static async setup(){
-        const labels = await LocaleManager.getLabelTranslationsMulti([
+        const labels = LocaleManager.getLabelTranslationsMulti([
             'help.chat.say',
             'help.chat.help'
         ]);

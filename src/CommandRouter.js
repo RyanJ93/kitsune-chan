@@ -1,6 +1,7 @@
 'use strict';
 
 const GuildConfig = require('./models/GuildConfig');
+const BotException = require('./exceptions/BotException');
 
 class CommandRouter {
     static #client = null;
@@ -15,6 +16,13 @@ class CommandRouter {
         return guildConfig;
     }
 
+    static async #handleCommandException(ex, channel){
+        if ( !( ex instanceof BotException ) ){
+            throw ex;
+        }
+        await channel.send('Error: ' + ex.message);
+    }
+
     static async #handleMessage(message){
         if ( !message.author.bot ){
             const guildConfig = await CommandRouter.#getGuildConfig(message.channel.guild.id);
@@ -26,7 +34,9 @@ class CommandRouter {
                 if ( typeof command !== 'undefined' ){
                     message.cleanedContent = message.content.substr(start + commandName.length + 1);
                     const controller = new command.controller(CommandRouter.#client, guildConfig, message);
-                    await controller[command.method]();
+                    controller[command.method]().catch((ex) => {
+                        CommandRouter.#handleCommandException(ex, message.channel);
+                    });
                 }
             }
         }
@@ -52,6 +62,10 @@ class CommandRouter {
             controller: controller,
             method: method
         });
+    }
+
+    static commandExists(command){
+        return CommandRouter.#commands.has(command);
     }
 }
 

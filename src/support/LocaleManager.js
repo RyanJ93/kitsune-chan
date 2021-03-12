@@ -1,85 +1,112 @@
 'use strict';
 
 const fs = require('fs');
+const path = require('path');
 const lala = require('@lala.js/core');
 
 class LocaleManager {
-    static #locales = [];
+    static #localeRoleList = new Map();
+    static #localizedLabels = new Map();
+    static #defaultLocale = LocaleManager.DEFAULT_LOCALE;
 
-    static setAvailableLocales(locales){
-        LocaleManager.#locales = [];
-        LocaleManager.#locales = locales.filter((locale) => typeof locale === 'string');
-    }
-
-    static async #loadLocalePackage(locale){
-        const path = __dirname + '/' + LocaleManager.LOCALE_PACKAGE_PATH + locale + '.json';
-        const contents = await fs.promises.readFile(path);
-        const labels = JSON.parse(contents.toString());
-        return labels === null || typeof labels !== 'object' ? null : {
-            labels: labels,
-            locale: locale
-        };
-    }
-
-    static async loadLabels(){
-        const localeCache = lala.CacheRepository.get('localeCache');
-        const localePackages = await Promise.all(LocaleManager.#locales.map((locale) => {
-            return LocaleManager.#loadLocalePackage(locale);
-        }));
-        const processes = [];
-        localePackages.forEach((localePackage) => {
-            if ( localePackage !== null ){
-                for ( const key in localePackage.labels ){
-                    if ( localePackage.labels.hasOwnProperty(key) && typeof localePackage.labels[key] === 'string' ){
-                        processes.push(localeCache.set(localePackage.locale + '.' + key, localePackage.labels[key]));
+    static async #loadPackage(fileName){
+        const packagePath = __dirname + '/' + LocaleManager.LOCALE_PACKAGE_PATH + '/' + fileName;
+        const contents = await fs.promises.readFile(packagePath);
+        const data = JSON.parse(contents.toString());
+        if ( data.locale !== '' && typeof data.locale === 'string' && data.labels !== null && typeof data.labels === 'object' ){
+            if ( Array.isArray(data.roles) ){
+                data.roles.forEach((role) => {
+                    if ( role !== '' && typeof role === 'string' ){
+                        LocaleManager.#localeRoleList.set(role, data.locale);
                     }
-                }
+                });
             }
-        });
-        await Promise.all(processes);
+            LocaleManager.#localizedLabels.set(data.locale, data.labels);
+        }
+    }
+
+    static setDefaultLocale(defaultLocale){
+        if ( defaultLocale === '' || typeof defaultLocale !== 'string' ){
+            throw new lala.InvalidArgumentException('Invalid default locale.', 1);
+        }
+        LocaleManager.#defaultLocale = defaultLocale;
+    }
+
+    static getDefaultLocale(){
+        return LocaleManager.#defaultLocale;
+    }
+
+    static async loadLocales(){
+        LocaleManager.#localeRoleList.clear();
+        LocaleManager.#localizedLabels.clear();
+        const packageDirectory = __dirname + '/' + LocaleManager.LOCALE_PACKAGE_PATH;
+        const files = await fs.promises.readdir(packageDirectory);
+        await Promise.all(files.map((fileName) => {
+            if ( path.extname(fileName).toLowerCase() === '.json' ){
+                return LocaleManager.#loadPackage(fileName);
+            }
+        }));
+    }
+
+    static getLocaleByGuildMember(guildMember, useDefaultAsFallback = true){ // preferredLocale:
+        let guildPreferredLocale = guildMember.guild.preferredLocale, found = false;
+        let locale = useDefaultAsFallback !== false ? LocaleManager.#defaultLocale : null;
+        for ( const [roleID, role] of guildMember.roles.cache ){
+            const candidate = LocaleManager.#localeRoleList.get(role.name.toLowerCase());
+            if ( typeof candidate === 'string' ){
+                locale = candidate;
+                found = true;
+                break;
+            }
+        }
+        if ( !found ){
+            const shortLocale = guildPreferredLocale.substr(0, 2);
+            if ( LocaleManager.#localizedLabels.has(guildPreferredLocale) ){
+                locale = guildPreferredLocale;
+            }else if ( LocaleManager.#localizedLabels.has(shortLocale) ){
+                locale = shortLocale;
+            }
+        }
+        return locale;
     }
 
     static getLabel(key, locale){
-        const localeCache = lala.CacheRepository.get('localeCache');
-        return localeCache.get(locale + '.' + key, {
-            silent: true
-        });
+        const labelStack = LocaleManager.#localizedLabels.get(locale);
+        return typeof labelStack === 'undefined' || !labelStack.hasOwnProperty(key) ? null : labelStack[key];
     }
 
     static getLabelMulti(keys, locale){
-        const localeCache = lala.CacheRepository.get('localeCache');
-        keys = keys.map((key) => { return locale + '.' + key });
-        return localeCache.getMulti(keys, {
-            silent: true
-        });
+        const labelStack = LocaleManager.#localizedLabels.get(locale), labels = {};
+        if ( typeof labelStack !== 'undefined' ){
+            keys.forEach((key) => {
+                if ( labelStack.hasOwnProperty(key) ){
+                    labels[key] = labelStack[key];
+                }
+            });
+        }
     }
 
     static getLabelTranslations(key){
-        const localeCache = lala.CacheRepository.get('localeCache');
-        const keys = LocaleManager.#locales.map((locale) => { return locale + '.' + key });
-        return localeCache.getMulti(keys, {
-            silent: true
-        });
+        const labels = {};
+        for ( const [locale, labelStack] of LocaleManager.#localizedLabels ){
+            if ( labelStack.hasOwnProperty(key) ){
+                labels[locale] = labelStack[key];
+            }
+        }
+        return labels;
     }
 
-    static async getLabelTranslationsMulti(keys){
-        const localeCache = lala.CacheRepository.get('localeCache'), keyList = [], labels = {};
-        LocaleManager.#locales.forEach((locale) => { 
-            const additionalKeys = keys.map((key) => { return locale + '.' + key });
-            keyList.push(...additionalKeys);
-        });
-        const entries = await localeCache.getMulti(keyList, {
-            silent: true
-        });
-        for( const key in entries ){
-            const index = key.indexOf('.');
-            if ( index > 0 ){
-                const labelKey = key.substr(index + 1);
-                if ( !labels.hasOwnProperty(labelKey) ){
-                    labels[labelKey] = {};
+    static getLabelTranslationsMulti(keys){
+        const labels = {};
+        for ( const [locale, labelStack] of LocaleManager.#localizedLabels ){
+            keys.forEach((key) => {
+                if ( labelStack.hasOwnProperty(key) ){
+                    if ( !labels.hasOwnProperty(key) ){
+                        labels[key] = {};
+                    }
+                    labels[key][locale] = labelStack[key];
                 }
-                labels[labelKey][key.substr(0, index)] = entries[key];
-            }
+            });
         }
         return labels;
     }
@@ -89,5 +116,11 @@ Object.defineProperty(LocaleManager, 'LOCALE_PACKAGE_PATH', {
     value: '../../assets/locales/',
     writable: false
 });
+
+Object.defineProperty(LocaleManager, 'DEFAULT_LOCALE', {
+    value: 'en',
+    writable: false
+});
+
 
 module.exports = LocaleManager;
