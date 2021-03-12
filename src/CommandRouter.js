@@ -33,7 +33,7 @@ class CommandRouter {
                 const commandName = end === -1 ? message.content.substr(start) : message.content.substr(start, end - 1);
                 const command = CommandRouter.#commands.get(commandName);
                 if ( typeof command !== 'undefined' ){
-                    if ( command.adminRequired && !message.member.hasPermission("ADMINISTRATOR") ){
+                    if ( command.adminRequired && !message.member.hasPermission('ADMINISTRATOR') ){
                         await message.channel.send(LocaleManager.getLabel('common.adminRequired'));
                         return;
                     }
