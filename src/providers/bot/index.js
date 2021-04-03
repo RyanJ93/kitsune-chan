@@ -2,5 +2,6 @@
 
 module.exports = {
     BotProvider: require('./BotProvider'),
-    ChatProvider: require('./ChatProvider')
+    ChatProvider: require('./ChatProvider'),
+    UserProvider: require('./UserProvider')
 };

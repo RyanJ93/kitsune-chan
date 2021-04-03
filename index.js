@@ -10,7 +10,8 @@ lala.init({
         providers.CacheProvider,
         providers.LocaleProvider,
         providers.bot.BotProvider,
-        providers.bot.ChatProvider
+        providers.bot.ChatProvider,
+        providers.bot.UserProvider
     ]
 }).then(() => {
     console.log('Sono pronta!');
