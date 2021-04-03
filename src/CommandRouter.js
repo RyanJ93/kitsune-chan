@@ -1,8 +1,10 @@
 'use strict';
 
+const lala = require('@lala.js/core');
 const GuildConfig = require('./models/GuildConfig');
 const BotException = require('./exceptions/BotException');
 const LocaleManager = require('./support/LocaleManager');
+const { MessageEmbed } = require('discord.js');
 
 class CommandRouter {
     static #client = null;
@@ -17,11 +19,16 @@ class CommandRouter {
         return guildConfig;
     }
 
-    static async #handleCommandException(ex, channel){
+    static async #handleCommandException(ex, message){
+        const locale = LocaleManager.getLocaleByGuildMember(message.member);
+        const title = LocaleManager.getLabel('common.error.title', locale);
+        const messageEmbed = new MessageEmbed();
+        const description = ex instanceof BotException ? ex.message : LocaleManager.getLabel('common.error.generic', locale);
+        messageEmbed.setColor('#e74c3c').setTitle(title).setDescription(description);
+        await message.channel.send(messageEmbed);
         if ( !( ex instanceof BotException ) ){
             throw ex;
         }
-        await channel.send('Error: ' + ex.message);
     }
 
     static async #handleMessage(message){
@@ -40,7 +47,7 @@ class CommandRouter {
                     message.cleanedContent = message.content.substr(start + commandName.length + 1);
                     const controller = new command.controller(CommandRouter.#client, guildConfig, message);
                     controller[command.method]().catch((ex) => {
-                        CommandRouter.#handleCommandException(ex, message.channel);
+                        CommandRouter.#handleCommandException(ex, message);
                     });
                 }
             }
