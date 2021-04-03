@@ -1,21 +1,26 @@
 'use strict';
 
+const { MessageEmbed } = require('discord.js');
 const BotController = require('./BotController');
 const HelpService = require('../../services/HelpService');
 const BotException = require('../../exceptions/BotException');
 const CommandRouter = require('../../CommandRouter');
 const LocaleManager = require('../../support/LocaleManager');
-const { MessageEmbed } = require('discord.js');
+const DateUtils = require('../../support/DateUtils');
 
 class UserBotController extends BotController {
     async userinfo(){
-        //const user = this._message.mentions.membesr.size == 0?
-        let user;
-        if ( this._message.mentions.members.size === 0 ) {
-            user = this._message.author;
-        } else {
-            user = Object.values(this._message.mentions.members)[0].user;
+        let member;
+        if ( this._message.mentions.members.size === 0 ){
+            member = this._message.member;
+        }else{
+            member = Object.values(this._message.mentions.members)[0];
         }
+        let avatarURL = member.user.defaultAvatarURL;
+        if ( member.user.avatar !== null ){
+            avatarURL = UserBotController.AVATAR_URL_TEMPLATE.replace('{ID}', member.user.id).replace('{AVATAR}', member.user.avatar);
+        }
+        const roles = member.roles.cache.map(role => role.name);
         var elencoPermessi = "";
         /*if (user.hasPermission("ADMINISTRATOR")) {
             elencoPermessi = "👑 ADMINISTRATOR";
@@ -29,20 +34,26 @@ class UserBotController extends BotController {
                 }
             }
         }*/
-
-         var embed = new MessageEmbed()
-        .setTitle(user.tag)
-        .setDescription("Tutte le info di questo utente")
-        .setThumbnail(user.avatarURL())
-        .addField("User id", "```" + user.id + "```", true)
-        .addField("Is a bot?", user.bot ? "```Yes```" : "```No```", true)
-        .addField("Account created", "```" + user.createdAt.toDateString() + "```", true)
-        //.addField("Joined this server", "```" + user.joinedAt.toDateString() + "```", true)
-        .addField("Permissions", "```" + elencoPermessi + "```", false)
-        //.addField("Roles", "```" + user.roles.cache.map(ruolo => ruolo.name).join("\r") + "```", false)
-
-        await this._message.channel.send(embed);
+        const messageEmbed = new MessageEmbed(); // per convenzione chiamiano le instaze degli oggetti con il nome della classe con l'iniziale minuscola.
+        messageEmbed.setTitle(member.user.tag);
+        messageEmbed.setDescription("Tutte le info di questo utente"); // la label è da tradurre.
+        //messageEmbed.setThumbnail(avatarURL);
+        // Da tradurre anche le label sottostanti
+        messageEmbed.addField("User id", "```" + member.user.id + "```", true);
+        messageEmbed.addField("Is a bot?", member.user.bot ? "```Yes```" : "```No```", true);
+        // usiamo "stringifyDate" che usa il metodo "toLocaleDateString" di js per visualizzare la data in lingua.
+        messageEmbed.addField("Account created", "```" + DateUtils.stringifyDate(member.user.createdAt, this._locale) + "```", false);
+        messageEmbed.addField("Joined this server", "```" + DateUtils.stringifyDate(member.joinedAt, this._locale) + "```", false);
+        messageEmbed.addField("Permissions", "```" + elencoPermessi + "```", false);
+        messageEmbed.addField("Roles", "```" + roles.join('\r') + "```", false);
+        messageEmbed.setImage(avatarURL);
+        await this._message.channel.send(messageEmbed);
     }
 }
+
+Object.defineProperty(UserBotController, 'AVATAR_URL_TEMPLATE', {
+    value: 'https://cdn.discordapp.com/avatars/{ID}/{AVATAR}.jpg?size=512',
+    writable: false
+});
 
 module.exports = UserBotController;
