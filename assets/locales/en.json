@@ -6,6 +6,12 @@
         "help.chat.say": "Sends a message containing the provided text.",
         "help.chat.help": "Displays all the available features.",
         "chat.help.commandNotFound": "I'm sorry, this command doesn't exist.",
-        "help.user.userinfo": ""
+        "help.user.userinfo": "",
+        "user.userinfo.description": "",
+        "user.userinfo.id": "",
+        "user.userinfo.infoBot": "",
+        "user.userinfo.accountCreatedAt": "",
+        "user.userinfo.joinedAt": "",
+        "user.userinfo.roles": ""
     }
 }

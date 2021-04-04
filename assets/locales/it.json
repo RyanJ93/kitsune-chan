@@ -6,6 +6,12 @@
         "help.chat.say": "Invia un messaggio con il testo inserito.",
         "help.chat.help": "Mostra le funzionalità disponibili.",
         "chat.help.commandNotFound": "Mi dispiace, non trovo questo comando.",
-        "help.user.userinfo": "Mostra le informazioni dell'utente."
+        "help.user.userinfo": "Mostra le informazioni dell'utente.",
+        "user.userinfo.description": "Tutte le info di questo utente.",
+        "user.userinfo.id": "Mostra l'ID utente.",
+        "user.userinfo.infoBot": "E' un bot?",
+        "user.userinfo.accountCreatedAt": "Data iscrizione:",
+        "user.userinfo.joinedAt": "Data entrata:",
+        "user.userinfo.roles": "Ruoli:"
     }
 }
