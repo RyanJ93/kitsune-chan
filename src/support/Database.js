@@ -15,9 +15,11 @@ class Database {
     }
 
     static async _ensureIndexes(){
-        const processes = [];
-        processes.push(Database._connection.collection('guildsConfig').createIndex({ guildID: 1 }, { unique: true }));
-        await Promise.all(processes);
+        await Promise.all([
+            Database._connection.collection('guildsConfig').createIndex({ guildID: 1 }, { unique: true }),
+            Database._connection.collection('memberCountConfig').createIndex({ guildID: 1 }, { unique: true }),
+            Database._connection.collection('memberCountCounterSet').createIndex({ guildID: 1 }, { unique: true })
+        ]);
     }
 
     static async setup(){
