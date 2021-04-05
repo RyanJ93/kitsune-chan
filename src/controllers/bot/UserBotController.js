@@ -2,9 +2,6 @@
 
 const { MessageEmbed } = require('discord.js');
 const BotController = require('./BotController');
-const HelpService = require('../../services/HelpService');
-const BotException = require('../../exceptions/BotException');
-const CommandRouter = require('../../CommandRouter');
 const LocaleManager = require('../../support/LocaleManager');
 const DateUtils = require('../../support/DateUtils');
 
@@ -23,12 +20,25 @@ class UserBotController extends BotController {
         const roles = member.roles.cache.map(role => role.name);
         const messageEmbed = new MessageEmbed();
         messageEmbed.setTitle(member.user.tag);
-        messageEmbed.setDescription(LocaleManager.getLabel('user.userinfo.description', this._locale));
-        messageEmbed.addField(LocaleManager.getLabel('user.userinfo.id', this._locale), "```" + member.user.id + "```", true);
-        messageEmbed.addField(LocaleManager.getLabel('user.userinfo.infoBot', this._locale), member.user.bot ? "```Yes```" : "```No```", true);
-        messageEmbed.addField(LocaleManager.getLabel('user.userinfo.accountCreatedAt', this._locale), "```" + DateUtils.stringifyDate(member.user.createdAt, this._locale) + "```", false);
-        messageEmbed.addField(LocaleManager.getLabel('user.userinfo.joinedAt', this._locale), "```" + DateUtils.stringifyDate(member.joinedAt, this._locale) + "```", false);
-        messageEmbed.addField(LocaleManager.getLabel('user.userinfo.roles', this._locale), "```" + roles.join('\r') + "```", false);
+        const labels = LocaleManager.getLabelMulti([
+            'user.userinfo.description',
+            'user.userinfo.userID',
+            'user.userinfo.infoBot',
+            'common.yes',
+            'common.no',
+            'user.userinfo.accountCreatedAt',
+            'user.userinfo.joinedAt',
+            'user.userinfo.roles'
+        ], this._locale);
+        const accountCreatedAt = DateUtils.stringifyDate(member.user.createdAt, this._locale);
+        const joinedAt = DateUtils.stringifyDate(member.joinedAt, this._locale);
+        const isBot = member.user.bot ? labels['common.yes'] : labels['common.no'];
+        messageEmbed.setDescription(labels['user.userinfo.description']);
+        messageEmbed.addField(labels['user.userinfo.userID'], "```" + member.user.id + "```", true);
+        messageEmbed.addField(labels['user.userinfo.infoBot'], "```" + isBot + "```", true);
+        messageEmbed.addField(labels['user.userinfo.accountCreatedAt'], "```" + accountCreatedAt + "```", false);
+        messageEmbed.addField(labels['user.userinfo.joinedAt'], "```" + joinedAt + "```", false);
+        messageEmbed.addField(labels['user.userinfo.roles'], "```" + roles.join('\r') + "```", false);
         messageEmbed.setImage(avatarURL);
         await this._message.channel.send(messageEmbed);
     }

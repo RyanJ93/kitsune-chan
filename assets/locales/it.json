@@ -3,13 +3,15 @@
     "roles": ["it", "italian", "italiano"],
     "labels": {
         "common.adminRequired": "Non hai i permessi per utilizzare questo comando, solo gli amministratori possono usarlo.",
+        "common.yes": "Si",
+        "common.no": "No",
         "help.chat.say": "Invia un messaggio con il testo inserito.",
         "help.chat.help": "Mostra le funzionalità disponibili.",
         "chat.help.commandNotFound": "Mi dispiace, non trovo questo comando.",
         "help.user.userinfo": "Mostra le informazioni dell'utente.",
         "user.userinfo.description": "Tutte le info di questo utente.",
-        "user.userinfo.id": "Mostra l'ID utente.",
-        "user.userinfo.infoBot": "E' un bot?",
+        "user.userinfo.userID": "ID utente:",
+        "user.userinfo.infoBot": "É un bot?",
         "user.userinfo.accountCreatedAt": "Data iscrizione:",
         "user.userinfo.joinedAt": "Data entrata:",
         "user.userinfo.roles": "Ruoli:"

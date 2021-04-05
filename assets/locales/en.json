@@ -3,15 +3,17 @@
     "roles": ["en", "english"],
     "labels": {
         "common.adminRequired": "You don't have the permission to issue this command, it can be used by admins only.",
+        "common.yes": "Yes",
+        "common.no": "No",
         "help.chat.say": "Sends a message containing the provided text.",
         "help.chat.help": "Displays all the available features.",
         "chat.help.commandNotFound": "I'm sorry, this command doesn't exist.",
-        "help.user.userinfo": "",
-        "user.userinfo.description": "",
-        "user.userinfo.id": "",
-        "user.userinfo.infoBot": "",
-        "user.userinfo.accountCreatedAt": "",
-        "user.userinfo.joinedAt": "",
-        "user.userinfo.roles": ""
+        "help.user.userinfo": "Displays user related information",
+        "user.userinfo.description": "All user information",
+        "user.userinfo.userID": "User ID",
+        "user.userinfo.infoBot": "Is it a bot?",
+        "user.userinfo.accountCreatedAt": "Signup date:",
+        "user.userinfo.joinedAt": "Server join date:",
+        "user.userinfo.roles": "Roles:"
     }
 }
