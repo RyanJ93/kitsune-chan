@@ -5,6 +5,16 @@
         "common.adminRequired": "You don't have the permission to issue this command, it can be used by admins only.",
         "help.chat.say": "Sends a message containing the provided text.",
         "help.chat.help": "Displays all the available features.",
-        "chat.help.commandNotFound": "I'm sorry, this command doesn't exist."
+        "help.memberCount.counter": "Enables or disables a given counter.",
+        "help.memberCount.counterName": "Sets the name of a given counter.",
+        "help.memberCount.refreshCounters": "Starts the asynchronous refresh for every counter's value.",
+        "chat.help.commandNotFound": "I'm sorry, this command doesn't exist.",
+        "memberCount.counter.unsupportedCounter": "This kind of counter is not supported.",
+        "memberCount.counter.unsupportedOperation": "This operation is not supported, you can enable or disable a counter by using the \"on\" and \"off\" operations.",
+        "memberCount.counter.counterEnabled": "Counter has been enabled.",
+        "memberCount.counter.counterDisabled": "Counter has been disabled.",
+        "memberCount.counter.invalidName": "The given counter name is not valid.",
+        "memberCount.counter.nameChanged": "Counter name changed.",
+        "memberCount.counter.countersRefreshStarted": "Counter refresh has started."
     }
 }

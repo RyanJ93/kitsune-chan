@@ -7,15 +7,16 @@ const Database = require('../support/Database');
 class MemberCountCounterSet extends Model {
     #guildID = null;
     #userCount = 0;
-    #channelCount = 0;
+    #textChannelCount = 0;
+    #voiceChannelCount = 0;
     #botCount = 0;
-    #userCounterName = MemberCountCounterSet.DEFAULT_USER_COUNTER_NAME;
-    #channelCounterName = MemberCountCounterSet.DEFAULT_CHANNEL_COUNTER_NAME;
-    #botCounterName = MemberCountCounterSet.DEFAULT_BOT_COUNTER_NAME;
-    #userCounterEnabled = false;
-    #channelCounterEnabled = false;
-    #botCounterEnabled = false;
-
+    #memberCounterChannelID = null;
+    #userCounterChannelID = null;
+    #textChannelCounterChannelID = null;
+    #voiceChannelCounterChannelID = null;
+    #channelCounterChannelID = null;
+    #botCounterChannelID = null;
+    
     static async find(guildID){
         if ( guildID === '' || typeof guildID !== 'string' ){
             throw new lala.InvalidArgumentException('Invalid guild ID.', 1);
@@ -72,16 +73,28 @@ class MemberCountCounterSet extends Model {
         return this.#userCount;
     }
 
-    setChannelCount(channelCount){
-        if ( channelCount === null || isNaN(channelCount) || channelCount < 0 ){
+    setTextChannelCount(textChannelCount){
+        if ( textChannelCount === null || isNaN(textChannelCount) || textChannelCount < 0 ){
             throw new lala.InvalidArgumentException('Invalid counter value.', 1);
         }
-        this.#channelCount = Math.floor(channelCount);
+        this.#textChannelCount = Math.floor(textChannelCount);
         return this;
     }
 
-    getChannelCount(){
-        return this.#channelCount;
+    getTextChannelCount(){
+        return this.#textChannelCount;
+    }
+
+    setVoiceChannelCount(voiceChannelCount){
+        if ( voiceChannelCount === null || isNaN(voiceChannelCount) || voiceChannelCount < 0 ){
+            throw new lala.InvalidArgumentException('Invalid counter value.', 1);
+        }
+        this.#voiceChannelCount = Math.floor(voiceChannelCount);
+        return this;
+    }
+
+    getVoiceChannelCount(){
+        return this.#voiceChannelCount;
     }
 
     setBotCount(botCount){
@@ -96,67 +109,84 @@ class MemberCountCounterSet extends Model {
         return this.#botCount;
     }
 
-    setUserCounterName(userCounterName){
-        if ( userCounterName === '' || typeof userCounterName !== 'string' ){
-            throw new lala.InvalidArgumentException('Invalid counter name.', 1);
+    getMemberCount(){
+        return this.#userCount + this.#botCount;
+    }
+
+    getChannelCount(){
+        return this.#textChannelCount + this.#voiceChannelCount;
+    }
+
+    setMemberCounterChannelID(memberCounterChannelID){
+        if ( memberCounterChannelID !== null && ( memberCounterChannelID === '' || typeof memberCounterChannelID !== 'string' ) ){
+            throw new lala.InvalidArgumentException('Invalid channel ID.', 1);
         }
-        this.#userCounterName = userCounterName;
+        this.#memberCounterChannelID = memberCounterChannelID;
         return this;
     }
 
-    getUserCounterName(){
-        return this.#userCounterName;
+    getMemberCounterChannelID(){
+        return this.#memberCounterChannelID;
     }
 
-    setChannelCounterName(channelCounterName){
-        if ( channelCounterName === '' || typeof channelCounterName !== 'string' ){
-            throw new lala.InvalidArgumentException('Invalid counter name.', 1);
+    setUserCounterChannelID(userCounterChannelID){
+        if ( userCounterChannelID !== null && ( userCounterChannelID === '' || typeof userCounterChannelID !== 'string' ) ){
+            throw new lala.InvalidArgumentException('Invalid channel ID.', 1);
         }
-        this.#channelCounterName = channelCounterName;
+        this.#userCounterChannelID = userCounterChannelID;
         return this;
     }
 
-    getChannelCounterName(){
-        return this.#channelCounterName;
+    getUserCounterChannelID(){
+        return this.#userCounterChannelID;
     }
 
-    setBotCounterName(botCounterName){
-        if ( botCounterName === '' || typeof botCounterName !== 'string' ){
-            throw new lala.InvalidArgumentException('Invalid counter name.', 1);
+    setTextChannelCounterChannelID(textChannelCounterChannelID){
+        if ( textChannelCounterChannelID !== null && ( textChannelCounterChannelID === '' || typeof textChannelCounterChannelID !== 'string' ) ){
+            throw new lala.InvalidArgumentException('Invalid channel ID.', 1);
         }
-        this.#botCounterName = botCounterName;
+        this.#textChannelCounterChannelID = textChannelCounterChannelID;
         return this;
     }
 
-    getBotCounterName(){
-        return this.#botCounterName;
+    getTextChannelCounterChannelID(){
+        return this.#textChannelCounterChannelID;
     }
 
-    setUserCounterEnabled(userCounterEnabled){
-        this.#userCounterEnabled = userCounterEnabled === true;
+    setVoiceChannelCounterChannelID(voiceChannelCounterChannelID){
+        if ( voiceChannelCounterChannelID !== null && ( voiceChannelCounterChannelID === '' || typeof voiceChannelCounterChannelID !== 'string' ) ){
+            throw new lala.InvalidArgumentException('Invalid channel ID.', 1);
+        }
+        this.#voiceChannelCounterChannelID = voiceChannelCounterChannelID;
         return this;
     }
 
-    getUserCounterEnabled(){
-        return this.#userCounterEnabled;
+    getVoiceChannelCounterChannelID(){
+        return this.#voiceChannelCounterChannelID;
     }
 
-    setChannelCounterEnabled(channelCounterEnabled){
-        this.#channelCounterEnabled = channelCounterEnabled === true;
+    setChannelCounterChannelID(channelCounterChannelID){
+        if ( channelCounterChannelID !== null && ( channelCounterChannelID === '' || typeof channelCounterChannelID !== 'string' ) ){
+            throw new lala.InvalidArgumentException('Invalid channel ID.', 1);
+        }
+        this.#channelCounterChannelID = channelCounterChannelID;
         return this;
     }
 
-    getChannelCounterEnabled(){
-        return this.#userCounterEnabled;
+    getChannelCounterChannelID(){
+        return this.#channelCounterChannelID;
     }
 
-    setBotCounterEnabled(botCounterEnabled){
-        this.#botCounterEnabled = botCounterEnabled === true;
+    setBotCounterChannelID(botCounterChannelID){
+        if ( botCounterChannelID !== null && ( botCounterChannelID === '' || typeof botCounterChannelID !== 'string' ) ){
+            throw new lala.InvalidArgumentException('Invalid channel ID.', 1);
+        }
+        this.#botCounterChannelID = botCounterChannelID;
         return this;
     }
 
-    getBotCounterEnabled(){
-        return this.#botCounterEnabled;
+    getBotCounterChannelID(){
+        return this.#botCounterChannelID;
     }
 
     setProperties(properties){
@@ -166,48 +196,70 @@ class MemberCountCounterSet extends Model {
         if ( properties.hasOwnProperty('userCount') ){
             this.setUserCount(properties.userCount);
         }
-        if ( properties.hasOwnProperty('channelCount') ){
-            this.setChannelCount(properties.channelCount);
+        if ( properties.hasOwnProperty('textChannelCount') ){
+            this.setTextChannelCount(properties.textChannelCount);
+        }
+        if ( properties.hasOwnProperty('voiceChannelCount') ){
+            this.setVoiceChannelCount(properties.voiceChannelCount);
         }
         if ( properties.hasOwnProperty('botCount') ){
             this.setBotCount(properties.botCount);
         }
-        if ( properties.hasOwnProperty('userCounterName') ){
-            this.setUserCounterName(properties.userCounterName);
+        if ( properties.hasOwnProperty('memberCounterChannelID') ){
+            this.setMemberCounterChannelID(properties.memberCounterChannelID);
         }
-        if ( properties.hasOwnProperty('channelCounterName') ){
-            this.setChannelCounterName(properties.channelCounterName);
+        if ( properties.hasOwnProperty('userCounterChannelID') ){
+            this.setUserCounterChannelID(properties.userCounterChannelID);
         }
-        if ( properties.hasOwnProperty('botCounterName') ){
-            this.setBotCounterName(properties.botCounterName);
+        if ( properties.hasOwnProperty('textChannelCounterChannelID') ){
+            this.setTextChannelCounterChannelID(properties.textChannelCounterChannelID);
         }
-        if ( properties.hasOwnProperty('userCounterEnabled') ){
-            this.setUserCounterEnabled(properties.userCounterEnabled);
+        if ( properties.hasOwnProperty('voiceChannelCounterChannelID') ){
+            this.setVoiceChannelCounterChannelID(properties.voiceChannelCounterChannelID);
         }
-        if ( properties.hasOwnProperty('channelCounterEnabled') ){
-            this.setChannelCounterEnabled(properties.channelCounterEnabled);
+        if ( properties.hasOwnProperty('channelCounterChannelID') ){
+            this.setChannelCounterChannelID(properties.channelCounterChannelID);
         }
-        if ( properties.hasOwnProperty('botCounterEnabled') ){
-            this.setBotCounterEnabled(properties.botCounterEnabled);
+        if ( properties.hasOwnProperty('botCounterChannelID') ){
+            this.setBotCounterChannelID(properties.botCounterChannelID);
         }
         return this;
     }
 
+    getProperties(){
+        return {
+            guildID: this.#guildID,
+            textChannelCount: this.#textChannelCount,
+            voiceChannelCount: this.#voiceChannelCount,
+            botCount: this.#botCount,
+            userCount: this.#userCount,
+            memberCounterChannelID: this.#memberCounterChannelID,
+            userCounterChannelID: this.#userCounterChannelID,
+            textChannelCounterChannelID: this.#textChannelCounterChannelID,
+            voiceChannelCounterChannelID: this.#voiceChannelCounterChannelID,
+            channelCounterChannelID: this.#channelCounterChannelID,
+            botCounterChannelID: this.#botCounterChannelID
+        };
+    }
+
+    getChannelIDs(){
+        return {
+            memberCounterChannelID: this.#memberCounterChannelID,
+            userCounterChannelID: this.#userCounterChannelID,
+            textChannelCounterChannelID: this.#textChannelCounterChannelID,
+            voiceChannelCounterChannelID: this.#voiceChannelCounterChannelID,
+            channelCounterChannelID: this.#channelCounterChannelID,
+            botCounterChannelID: this.#botCounterChannelID
+        };
+    }
+
     async save(){
+        const properties = this.getProperties();
+        delete properties.guildID;
         await Database.getConnection().collection('memberCountCounterSet').updateOne({
             guildID: this.#guildID
         }, {
-            $set: {
-                userCount: this.#userCount,
-                channelCount: this.#channelCount,
-                botCount: this.#botCount,
-                userCounterName: this.#userCounterName,
-                channelCounterName: this.#channelCounterName,
-                botCounterName: this.#botCounterName,
-                userCounterEnabled: this.#userCounterEnabled,
-                channelCounterEnabled: this.#channelCounterEnabled,
-                botCounterEnabled: this.#botCounterEnabled
-            }
+            $set: properties
         }, {
             upsert: true
         });
@@ -219,20 +271,5 @@ class MemberCountCounterSet extends Model {
         });
     }
 }
-
-Object.defineProperty(MemberCountCounterSet, 'DEFAULT_USER_COUNTER_NAME', {
-    value: 'Member count',
-    writable: false
-});
-
-Object.defineProperty(MemberCountCounterSet, 'DEFAULT_CHANNEL_COUNTER_NAME', {
-    value: 'Channel count',
-    writable: false
-});
-
-Object.defineProperty(MemberCountCounterSet, 'DEFAULT_BOT_COUNTER_NAME', {
-    value: 'Bot count',
-    writable: false
-});
 
 module.exports = MemberCountCounterSet;

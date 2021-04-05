@@ -9,7 +9,10 @@ const config = require('../../../config/config.json');
 class BotProvider extends lala.Provider {
     static async _bootstrapBot(){
         return new Promise((resolve) => {
-            const client = new Discord.Client();
+            const intents = new Discord.Intents([Discord.Intents.NON_PRIVILEGED, 'GUILD_MEMBERS']);
+            const client = new Discord.Client({
+                ws: { intents }
+            });
             client.on('ready', () => {
                 CommandRouter.setClient(client);
                 resolve(client);

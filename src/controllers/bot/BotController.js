@@ -9,11 +9,11 @@ class BotController {
     _message = null;
     _locale =  null;
 
-    async _reply(message){
+    _reply(message){
         if ( message === '' || typeof message !== 'string' ){
             throw new lala.InvalidArgumentException('Invalid message.', 1);
         }
-        await await this._message.channel.send(message);
+        return this._message.channel.send(message);
     }
 
     constructor(client, guildConfig, message){
