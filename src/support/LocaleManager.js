@@ -84,6 +84,7 @@ class LocaleManager {
                 }
             });
         }
+        return labels;
     }
 
     static getLabelTranslations(key){

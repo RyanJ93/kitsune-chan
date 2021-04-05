@@ -11,6 +11,7 @@ lala.init({
         providers.LocaleProvider,
         providers.bot.BotProvider,
         providers.bot.ChatProvider,
+        providers.bot.UserProvider,
         providers.bot.MemberCountProvider
     ]
 }).then(() => {

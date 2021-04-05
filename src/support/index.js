@@ -2,5 +2,6 @@
 
 module.exports = {
     Database: require('./Database'),
-    LocaleManager: require('./LocaleManager')
+    LocaleManager: require('./LocaleManager'),
+    DateUtils: require('./DateUtils')
 };
