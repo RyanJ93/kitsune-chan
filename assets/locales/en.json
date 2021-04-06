@@ -9,6 +9,7 @@
         "common.error.generic": "An error occurred please retry later.",
         "help.chat.say": "Sends a message containing the provided text.",
         "help.chat.help": "Displays all the available features.",
+        "help.chat.info": "Displays some piece of information related to the bot itself.",
         "help.user.userinfo": "Displays user related information",
         "help.memberCount.counter": "Enables or disables a given counter.",
         "help.memberCount.counterName": "Sets the name of a given counter.",
@@ -26,6 +27,15 @@
         "memberCount.counter.counterDisabled": "Counter has been disabled.",
         "memberCount.counter.invalidName": "The given counter name is not valid.",
         "memberCount.counter.nameChanged": "Counter name changed.",
-        "memberCount.counter.countersRefreshStarted": "Counter refresh has started."
+        "memberCount.counter.countersRefreshStarted": "Counter refresh has started.",
+        "chat.info.description": "A cute and fluffy bot for your Discord server.",
+        "chat.info.creator": "Creator:",
+        "chat.info.version": "Version:",
+        "chat.info.uptime": "Uptime:",
+        "chat.info.users": "Users:",
+        "chat.info.channels": "Channels:",
+        "chat.info.server": "Server:",
+        "chat.info.techs": "Technologies:",
+        "chat.info.techsText": "Project based on Discord.js, Lala.js, Node.js and MongoDB."
     }
 }

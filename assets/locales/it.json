@@ -9,6 +9,7 @@
         "common.error.generic": "Si è verificato un errore riprova più tardi.",
         "help.chat.say": "Invia un messaggio con il testo inserito.",
         "help.chat.help": "Mostra le funzionalità disponibili.",
+        "help.chat.info": "Mostra alcune informazioni relative al bot stesso.",
         "help.user.userinfo": "Mostra le informazioni dell'utente.",
         "help.memberCount.counter": "Attiva o disattiva un dato contatore.",
         "help.memberCount.counterName": "Imposta il nome da visualizzare per un dato contatore.",
@@ -26,6 +27,15 @@
         "memberCount.counter.counterDisabled": "Il contatore è stato disattivato.",
         "memberCount.counter.invalidName": "Il nome del contatore dato non è valido.",
         "memberCount.counter.nameChanged": "Il nome del contatore è stato cambiato.",
-        "memberCount.counter.countersRefreshStarted": "L'aggiornamento dei contatori è stato avviato."
+        "memberCount.counter.countersRefreshStarted": "L'aggiornamento dei contatori è stato avviato.",
+        "chat.info.description": "Un bot adorabile e morbidoso per il tuo server Discord.",
+        "chat.info.creator": "Creatore:",
+        "chat.info.version": "Versione:",
+        "chat.info.uptime": "Uptime:",
+        "chat.info.users": "Utenti:",
+        "chat.info.channels": "Canali:",
+        "chat.info.server": "Server:",
+        "chat.info.techs": "Tecnologie:",
+        "chat.info.techsText": "Progetto basato su Discord.js, Lala.js, Node.js e MongoDB."
     }
 }

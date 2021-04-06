@@ -43,6 +43,20 @@ class MemberCountCounterSet extends Model {
         return memberCountCounterSet;
     }
 
+    static async getGlobalCounters(){
+        const counters = await Database.getConnection().collection('memberCountCounterSet').aggregate([{
+            $project: {
+                users: { $sum: "$userCount" },
+                textChannels: { $sum: "$textChannelCount" },
+                voiceChannels: { $sum: "$voiceChannelCount" }
+            }
+        }]).toArray();
+        return !Array.isArray(counters) || counters.length === 0 ? null : {
+            users: counters[0].users,
+            channels: ( counters[0].textChannels + counters[0].voiceChannels )
+        };
+    }
+
     constructor(guildID){
         super();
 

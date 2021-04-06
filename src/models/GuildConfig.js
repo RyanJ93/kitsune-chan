@@ -23,6 +23,10 @@ class GuildConfig extends Model {
         return guildConfig;
     }
 
+    static count(){
+        return Database.getConnection().collection('guildsConfig').countDocuments();
+    }
+
     constructor(guildID){
         super();
 
