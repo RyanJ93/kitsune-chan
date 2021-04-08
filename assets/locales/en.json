@@ -8,6 +8,8 @@
         "common.error.title": "Ops, that's embarrassing...",
         "common.error.generic": "An error occurred please retry later.",
         "help.chat.say": "Sends a message containing the provided text.",
+        "help.chat.type": "Sends a message containing the provided text simulating message writing by the bot.",
+        "help.chat.target": "Sets the text channel where messages sent through the bot will be sent in.",
         "help.chat.help": "Displays all the available features.",
         "help.chat.info": "Displays some piece of information related to the bot itself.",
         "help.user.userinfo": "Displays user related information",
@@ -36,6 +38,10 @@
         "chat.info.channels": "Channels:",
         "chat.info.server": "Server:",
         "chat.info.techs": "Technologies:",
-        "chat.info.techsText": "Project based on Discord.js, Lala.js, Node.js and MongoDB."
+        "chat.info.techsText": "Project based on Discord.js, Lala.js, Node.js and MongoDB.",
+        "chat.target.invalidChannel": "This channel is not valid.",
+        "chat.target.undefinedChannel": "This channel doesn't exist.",
+        "chat.target.invalidTextChannel": "Target channel must be a text channel.",
+        "chat.target.channelSet": "Channel has been set."
     }
 }

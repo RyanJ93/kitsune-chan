@@ -8,6 +8,8 @@
         "common.error.title": "Ops, questo è imbarazzante...",
         "common.error.generic": "Si è verificato un errore riprova più tardi.",
         "help.chat.say": "Invia un messaggio con il testo inserito.",
+        "help.chat.type": "Invia un messaggio con il testo inserito simulando la scrittura da parte del bot.",
+        "help.chat.target": "Imposta il canale testuale dove i messaggi invati tramite il bot saranno inviati.",
         "help.chat.help": "Mostra le funzionalità disponibili.",
         "help.chat.info": "Mostra alcune informazioni relative al bot stesso.",
         "help.user.userinfo": "Mostra le informazioni dell'utente.",
@@ -36,6 +38,10 @@
         "chat.info.channels": "Canali:",
         "chat.info.server": "Server:",
         "chat.info.techs": "Tecnologie:",
-        "chat.info.techsText": "Progetto basato su Discord.js, Lala.js, Node.js e MongoDB."
+        "chat.info.techsText": "Progetto basato su Discord.js, Lala.js, Node.js e MongoDB.",
+        "chat.target.invalidChannel": "Questo canale non è valido.",
+        "chat.target.undefinedChannel": "Questo canale non esiste.",
+        "chat.target.invalidTextChannel": "Il canale bersaglio deve essere un canale testuale.",
+        "chat.target.channelSet": "Il canale è stato impostato."
     }
 }

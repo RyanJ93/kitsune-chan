@@ -4,24 +4,50 @@ const path = require('path');
 const { MessageEmbed, MessageAttachment } = require('discord.js');
 const BotController = require('./BotController');
 const HelpService = require('../../services/HelpService');
-const BotException = require('../../exceptions/BotException');
+const UsageBotException = require('../../exceptions/UsageBotException');
 const CommandRouter = require('../../CommandRouter');
 const LocaleManager = require('../../support/LocaleManager');
 const MemberCountCounterSet = require('../../models/MemberCountCounterSet');
 const GuildConfig = require('../../models/GuildConfig');
+const ChatConfig = require('../../models/ChatConfig');
+const ChatService = require('../../services/ChatService');
 
 class ChatBotController extends BotController {
     async say(){
         if ( this._message.cleanedContent !== '' && typeof this._message.cleanedContent === 'string' ){
-            await this._message.channel.send(this._message.cleanedContent);
+            const chatService = new ChatService(this._guild);
+            await chatService.say(this._message.cleanedContent, this._message.channel);
         }
+    }
+
+    async type(){
+        if ( this._message.cleanedContent !== '' && typeof this._message.cleanedContent === 'string' ){
+            const chatService = new ChatService(this._guild);
+            await chatService.type(this._message.cleanedContent, this._message.channel);
+        }
+    }
+
+    async target(){
+        const channelID = this._message.cleanedContent.substr(2, this._message.cleanedContent.length - 3);
+        if ( channelID === '' ){
+            throw new UsageBotException(LocaleManager.getLabel('chat.target.invalidChannel', this._locale), 1);
+        }
+        const channel = await this._guild.channels.resolve(channelID);
+        if ( channel === null ){
+            throw new UsageBotException(LocaleManager.getLabel('chat.target.undefinedChannel', this._locale), 2);
+        }else if ( channel.type !== 'text' ){
+            throw new UsageBotException(LocaleManager.getLabel('chat.target.invalidTextChannel', this._locale), 3);
+        }
+        const chatConfig = await ChatConfig.findOrNew(this._guild.id);
+        await chatConfig.setTargetChannelID(channelID).save();
+        await this._reply(LocaleManager.getLabel('chat.target.channelSet', this._locale));
     }
 
     async help(){
         let message;
         if ( this._message.cleanedContent !== '' && typeof this._message.cleanedContent === 'string' ){
             if ( !CommandRouter.commandExists(this._message.cleanedContent) ){
-                throw new BotException(LocaleManager.getLabel('chat.help.commandNotFound', this._locale), 1);
+                throw new UsageBotException(LocaleManager.getLabel('chat.help.commandNotFound', this._locale), 1);
             }
             message = HelpService.getHelpMessageContent(this._message.cleanedContent, this._locale);
         }else{
