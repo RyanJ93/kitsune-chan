@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports {
+module.exports = {
     BotException: require('./BotException'),
     UsageBotException: require('./UsageBotException')
 };

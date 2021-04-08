@@ -1,3 +1,7 @@
 'use strict';
 
-module.exports = {};
+module.exports = {
+    ChatService: require('./ChatService'),
+    HelpService: require('./HelpService'),
+    MemberCountService: require('./MemberCountService')
+};
