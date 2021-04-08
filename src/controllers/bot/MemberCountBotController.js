@@ -1,9 +1,11 @@
 'use strict';
 
+const { MessageEmbed } = require('discord.js');
 const BotController = require('./BotController');
 const LocaleManager = require('../../support/LocaleManager');
 const UsageBotException = require('../../exceptions/UsageBotException');
 const MemberCountService = require('../../services/MemberCountService');
+const MemberCountCounterSet = require('../../models/MemberCountCounterSet');
 
 class MemberCountBotController extends BotController {
     async counter(){
@@ -44,6 +46,30 @@ class MemberCountBotController extends BotController {
         const memberCountService = new MemberCountService(this._message.guild);
         await memberCountService.refreshCounters(true, true);
         await this._reply(LocaleManager.getLabel('memberCount.counter.countersRefreshStarted', this._locale));
+    }
+
+    async showCounters(){
+        const memberCountCounterSet = await MemberCountCounterSet.findOrNew(this._guild.id, true);
+        const messageEmbed = new MessageEmbed();
+        const labels = LocaleManager.getLabelMulti([
+            'memberCount.showCounters.description',
+            'memberCount.showCounters.members',
+            'memberCount.showCounters.users',
+            'memberCount.showCounters.bot',
+            'memberCount.showCounters.channels',
+            'memberCount.showCounters.textChannels',
+            'memberCount.showCounters.voiceChannels',
+            'memberCount.showCounters.footer'
+        ], this._locale);
+        messageEmbed.setDescription(labels['memberCount.showCounters.description']);
+        messageEmbed.addField(labels['memberCount.showCounters.members'], memberCountCounterSet.getMemberCount(), true);
+        messageEmbed.addField(labels['memberCount.showCounters.users'], memberCountCounterSet.getUserCount(), true);
+        messageEmbed.addField(labels['memberCount.showCounters.bot'], memberCountCounterSet.getBotCount(), true);
+        messageEmbed.addField(labels['memberCount.showCounters.channels'], memberCountCounterSet.getChannelCount(), true);
+        messageEmbed.addField(labels['memberCount.showCounters.textChannels'], memberCountCounterSet.getTextChannelCount(), true);
+        messageEmbed.addField(labels['memberCount.showCounters.voiceChannels'], memberCountCounterSet.getVoiceChannelCount(), true);
+        messageEmbed.setFooter(labels['memberCount.showCounters.footer']);
+        await this._message.channel.send(messageEmbed);
     }
 }
 

@@ -16,6 +16,7 @@
         "help.memberCount.counter": "Attiva o disattiva un dato contatore.",
         "help.memberCount.counterName": "Imposta il nome da visualizzare per un dato contatore.",
         "help.memberCount.refreshCounters": "Avvia il ricalcolo asincrono del valore di tutti i contatori.",
+        "help.memberCount.showCounters": "Mostra il valore di tutti i contatori.",
         "chat.help.commandNotFound": "Mi dispiace, non trovo questo comando.",
         "user.userinfo.description": "Tutte le info di questo utente.",
         "user.userinfo.userID": "ID utente:",
@@ -42,6 +43,14 @@
         "chat.target.invalidChannel": "Questo canale non è valido.",
         "chat.target.undefinedChannel": "Questo canale non esiste.",
         "chat.target.invalidTextChannel": "Il canale bersaglio deve essere un canale testuale.",
-        "chat.target.channelSet": "Il canale è stato impostato."
+        "chat.target.channelSet": "Il canale è stato impostato.",
+        "memberCount.showCounters.description": "Elenco di tutti i contatori disponibili",
+        "memberCount.showCounters.members": "Membri",
+        "memberCount.showCounters.users": "Utenti",
+        "memberCount.showCounters.bot": "Bot",
+        "memberCount.showCounters.channels": "Canali",
+        "memberCount.showCounters.textChannels": "Canali testuali",
+        "memberCount.showCounters.voiceChannels": "Canali vocale",
+        "memberCount.showCounters.footer": "Il conteggio dei canali non inlude i canali usati per mostrare i contatori stessi."
     }
 }

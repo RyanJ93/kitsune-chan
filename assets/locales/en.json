@@ -16,6 +16,7 @@
         "help.memberCount.counter": "Enables or disables a given counter.",
         "help.memberCount.counterName": "Sets the name of a given counter.",
         "help.memberCount.refreshCounters": "Starts the asynchronous refresh for every counter's value.",
+        "help.memberCount.showCounters": "Displays every counter's value.",
         "chat.help.commandNotFound": "I'm sorry, this command doesn't exist.",
         "user.userinfo.description": "All user information",
         "user.userinfo.userID": "User ID",
@@ -42,6 +43,14 @@
         "chat.target.invalidChannel": "This channel is not valid.",
         "chat.target.undefinedChannel": "This channel doesn't exist.",
         "chat.target.invalidTextChannel": "Target channel must be a text channel.",
-        "chat.target.channelSet": "Channel has been set."
+        "chat.target.channelSet": "Channel has been set.",
+        "memberCount.showCounters.description": "List of all the available counters",
+        "memberCount.showCounters.members": "Members",
+        "memberCount.showCounters.users": "Users",
+        "memberCount.showCounters.bot": "Bot",
+        "memberCount.showCounters.channels": "Channels",
+        "memberCount.showCounters.textChannels": "Text channels",
+        "memberCount.showCounters.voiceChannels": "Voice channels",
+        "memberCount.showCounters.footer": "Channels count doesn't consider channels used to show counters itself."
     }
 }
