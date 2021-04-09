@@ -48,9 +48,10 @@ class LocaleManager {
         }));
     }
 
-    static getLocaleByGuildMember(guildMember, useDefaultAsFallback = true){ // preferredLocale:
-        let guildPreferredLocale = guildMember.guild.preferredLocale, found = false;
+    static getLocaleByGuildMember(guildMember, useDefaultAsFallback = true){
+        let preferredLocale = guildMember.user.locale === null ? guildMember.guild.preferredLocale : guildMember.user.locale;
         let locale = useDefaultAsFallback !== false ? LocaleManager.#defaultLocale : null;
+        let found = false;
         for ( const [roleID, role] of guildMember.roles.cache ){
             const candidate = LocaleManager.#localeRoleList.get(role.name.toLowerCase());
             if ( typeof candidate === 'string' ){
@@ -60,9 +61,9 @@ class LocaleManager {
             }
         }
         if ( !found ){
-            const shortLocale = guildPreferredLocale.substr(0, 2);
-            if ( LocaleManager.#localizedLabels.has(guildPreferredLocale) ){
-                locale = guildPreferredLocale;
+            const shortLocale = preferredLocale.substr(0, 2);
+            if ( LocaleManager.#localizedLabels.has(preferredLocale) ){
+                locale = preferredLocale;
             }else if ( LocaleManager.#localizedLabels.has(shortLocale) ){
                 locale = shortLocale;
             }
