@@ -126,9 +126,12 @@ class MemberCountService extends lala.Service {
     async #createCounterChannel(fullChannelName){
         const transactionCache = lala.CacheRepository.get('transactionCache');
         const fingerprint = crypto.createHash('md5').update(fullChannelName).digest().toString('hex');
-        await transactionCache.set('memberCount.counterChannel.#' + fingerprint, true, {ttl: 600, overwrite: true});
+        // TODO: Enable TTL once upgraded to Lala.js 0.2.0
+        //await transactionCache.set('memberCount.counterChannel.#' + fingerprint, true, { ttl: 600, overwrite: true });
+        await transactionCache.set('memberCount.counterChannel.#' + fingerprint, true, { overwrite: true });
         const channel = await this.#guild.channels.create(fullChannelName, {type: 'voice', userLimit: 0, position: 0});
-        await transactionCache.set('memberCount.counterChannel.#' + channel.id, true, {ttl: 600, overwrite: true});
+        //await transactionCache.set('memberCount.counterChannel.#' + channel.id, true, { ttl: 600, overwrite: true });
+        await transactionCache.set('memberCount.counterChannel.#' + channel.id, true, { overwrite: true });
         return channel;
     }
 
