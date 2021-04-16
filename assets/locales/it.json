@@ -51,6 +51,14 @@
         "memberCount.showCounters.channels": "Canali",
         "memberCount.showCounters.textChannels": "Canali testuali",
         "memberCount.showCounters.voiceChannels": "Canali vocale",
-        "memberCount.showCounters.footer": "Il conteggio dei canali non inlude i canali usati per mostrare i contatori stessi."
+        "memberCount.showCounters.footer": "Il conteggio dei canali non inlude i canali usati per mostrare i contatori stessi.",
+        "guild.serverinfo.serverOwnerUserUsername": "Owner: ",
+        "guild.serverinfo.serverRegion": "Regione del server.",
+        "guild.serverinfo.memberCountCounterSetGetUserCount": "Numero utenti: ",
+        "guild.serverinfo.memberCountCounterSetGetChannelCount": "Numero canali: ",
+        "guild.serverinfo.serverCreatedToDateString": "Creazione server: ",
+        "guild.serverinfo.serverPremiumTier": "Livello boost: ",
+        "guild.serverinfo.serverPremiumSubscriptionCount": "Numero dei boost: ",
+        "help.guild.serverinfo": "Mostra le informazioni relative a questo server."
     }
 }

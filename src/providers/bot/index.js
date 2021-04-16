@@ -4,5 +4,6 @@ module.exports = {
     BotProvider: require('./BotProvider'),
     ChatProvider: require('./ChatProvider'),
     MemberCountProvider: require('./MemberCountProvider'),
-    UserProvider: require('./UserProvider')
+    UserProvider: require('./UserProvider'),
+    GuildProvider: require('./GuildProvider')
 };
