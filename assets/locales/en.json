@@ -62,7 +62,6 @@
         "guild.serverinfo.emojiCount": "Emoji count: ",
         "guild.serverinfo.createdAt": "Creation date: ",
         "guild.serverinfo.premiumTier": "Boost level: ",
-        "guild.serverinfo.serverPremiumSubscriptionCount": ""
         "chat.animatedEmoji.unsupportedOperation": "This operation is not supported, you can enable or disable animated emojis by using the \"on\" and \"off\" operations.",
         "chat.animatedEmoji.enabled": "Animated emoji has been enabled.",
         "chat.animatedEmoji.disabled": "Animated emoji has been disabled."

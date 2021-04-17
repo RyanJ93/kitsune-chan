@@ -62,7 +62,6 @@
         "guild.serverinfo.emojiCount": "Numero di emoji: ",
         "guild.serverinfo.createdAt": "Data di creazione: ",
         "guild.serverinfo.premiumTier": "Livello boost: ",
-        "guild.serverinfo.serverPremiumSubscriptionCount": "Numero dei boost: "
         "chat.animatedEmoji.unsupportedOperation": "Questa operazione non è supportata, puoi attivare o disattivare le emoji animate con le operazioni \"on\" e \"off\".",
         "chat.animatedEmoji.enabled": "Le emoji animate sono state attivato.",
         "chat.animatedEmoji.disabled": "Le emoji animate sono state disattivato."
