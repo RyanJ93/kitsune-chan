@@ -4,10 +4,20 @@ const lala = require('@lala.js/core');
 const Model = require('./Model');
 const Database = require('../support/Database');
 
-class GuildConfig extends Model {
-    #guildID = null;
-    #prefix = GuildConfig.DEFAULT_PREFIX;
+/**
+ * @typedef {Object} GuildConfigProperties
+ *
+ * @property {string} guildID
+ * @property {string} prefix
+ */
 
+class GuildConfig extends Model {
+    /**
+     *
+     * @param {string} guildID
+     *
+     * @return {Promise<?GuildConfig>}
+     */
     static async find(guildID){
         if ( guildID === '' || typeof guildID !== 'string' ){
             throw new lala.InvalidArgumentException('Invalid guild ID.', 1);
@@ -23,16 +33,58 @@ class GuildConfig extends Model {
         return guildConfig;
     }
 
+    /**
+     *
+     * @param {string} guildID
+     * @param {boolean} save
+     *
+     * @return {Promise<GuildConfig>}
+     */
+    static async findOrNew(guildID, save = false){
+        let guildConfig = await GuildConfig.find(guildID);
+        if ( guildConfig === null ){
+            guildConfig = new GuildConfig(guildID);
+            if ( save === true ){
+                await guildConfig.save();
+            }
+        }
+        return guildConfig;
+    }
+
+    /**
+     *
+     * @return {Promise<number>}
+     */
     static count(){
         return Database.getConnection().collection('guildsConfig').countDocuments();
     }
 
+    /**
+     * @type {?string}
+     */
+    #guildID = null;
+
+    /**
+     * @type {string}
+     */
+    #prefix = GuildConfig.DEFAULT_PREFIX;
+
+    /**
+     *
+     * @param {string} guildID
+     */
     constructor(guildID){
         super();
 
         this.setGuildID(guildID);
     }
 
+    /**
+     *
+     * @param {string} guildID
+     *
+     * @returns {GuildConfig}
+     */
     setGuildID(guildID){
         if ( guildID === '' || typeof guildID !== 'string' ){
             throw new lala.InvalidArgumentException('Invalid guild ID.', 1);
@@ -41,10 +93,20 @@ class GuildConfig extends Model {
         return this;
     }
 
+    /**
+     *
+     * @returns {string}
+     */
     getGuildID(){
         return this.#guildID;
     }
 
+    /**
+     *
+     * @param {string} prefix
+     *
+     * @return {GuildConfig}
+     */
     setPrefix(prefix){
         if ( prefix === '' || typeof prefix !== 'string' ){
             throw new lala.InvalidArgumentException('Invalid prefix.', 1);
@@ -53,10 +115,31 @@ class GuildConfig extends Model {
         return this;
     }
 
+    /**
+     *
+     * @return {string}
+     */
     getPrefix(){
         return this.#prefix;
     }
 
+    /**
+     *
+     * @returns {GuildConfigProperties}
+     */
+    getProperties(){
+        return {
+            guildID: this.#guildID,
+            prefix: this.#prefix
+        };
+    }
+
+    /**
+     *
+     * @param {GuildConfigProperties} properties
+     *
+     * @return {GuildConfig}
+     */
     setProperties(properties){
         if ( properties.hasOwnProperty('guildID') ){
             this.setGuildID(properties.guildID);
@@ -67,18 +150,22 @@ class GuildConfig extends Model {
         return this;
     }
 
+    /**
+     *
+     * @return {Promise<void>}
+     */
     async save(){
+        const properties = this.getProperties();
+        delete properties.guildID;
         await Database.getConnection().collection('guildsConfig').updateOne({
             guildID: this.#guildID
-        }, {
-            $set: {
-                prefix: this.#prefix
-            }
-        }, {
-            upsert: true
-        });
+        }, { $set: properties }, { upsert: true });
     }
 
+    /**
+     *
+     * @return {Promise<void>}
+     */
     async delete(){
         await Database.getConnection().collection('guildsConfig').deleteOne({
             guildID: this.#guildID

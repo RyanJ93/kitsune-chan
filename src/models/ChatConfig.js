@@ -62,6 +62,11 @@ class ChatConfig extends Model {
     #targetChannelID = null;
 
     /**
+     * @type {boolean}
+     */
+    #animatedEmojiEnabled = true;
+
+    /**
      * @param {string} guildID
      */
     constructor(guildID){
@@ -116,12 +121,32 @@ class ChatConfig extends Model {
 
     /**
      *
+     * @param {boolean} animatedEmojiEnabled
+     *
+     * @returns {ChatConfig}
+     */
+    setAnimatedEmojiEnabled(animatedEmojiEnabled){
+        this.#animatedEmojiEnabled = animatedEmojiEnabled !== false;
+        return this;
+    }
+
+    /**
+     *
+     * @returns {boolean}
+     */
+    getAnimatedEmojiEnabled(){
+        return this.#animatedEmojiEnabled;
+    }
+
+    /**
+     *
      * @returns {ChatConfigProperties}
      */
     getProperties(){
         return {
             guildID: this.#guildID,
-            targetChannelID: this.#targetChannelID
+            targetChannelID: this.#targetChannelID,
+            animatedEmojiEnabled: this.#animatedEmojiEnabled
         };
     }
 
@@ -137,6 +162,9 @@ class ChatConfig extends Model {
         }
         if ( properties.hasOwnProperty('targetChannelID') ){
             this.setTargetChannelID(properties.targetChannelID);
+        }
+        if ( properties.hasOwnProperty('animatedEmojiEnabled') ){
+            this.setAnimatedEmojiEnabled(properties.animatedEmojiEnabled);
         }
         return this;
     }
