@@ -14,7 +14,7 @@ class GuildProvider extends lala.Provider {
         ]);
         CommandRouter.registerCommand('serverinfo', GuildBotController, 'serverinfo');
         HelpService.registerCommand('serverinfo', 'Guild', labels['help.guild.serverinfo']);
-        CommandRouter.registerCommand('prefix', GuildBotController, 'prefix');
+        CommandRouter.registerCommand('prefix', GuildBotController, 'prefix', true);
         HelpService.registerCommand('prefix', 'Guild', labels['help.guild.prefix']);
     }
 }
