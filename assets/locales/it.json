@@ -18,6 +18,8 @@
         "help.memberCount.refreshCounters": "Avvia il ricalcolo asincrono del valore di tutti i contatori.",
         "help.memberCount.showCounters": "Mostra il valore di tutti i contatori.",
         "help.guild.serverinfo": "Mostra le informazioni relative a questo server.",
+        "help.chat.animatedEmoji": "Attiva o disattiva l'uso delle emoji animate per gli utenti non premium.",
+        "help.chat.emojiReact": "Reagisce con una o più emoji statiche o animate al messaggio precendente o a quello a qui questo messaggio è riferito.",
         "chat.help.commandNotFound": "Mi dispiace, non trovo questo comando.",
         "user.userinfo.description": "Tutte le info di questo utente.",
         "user.userinfo.userID": "ID utente:",
@@ -39,7 +41,6 @@
         "chat.info.users": "Utenti:",
         "chat.info.channels": "Canali:",
         "chat.info.server": "Server:",
-        "chat.info.techs": "Tecnologie:",
         "chat.info.techsText": "Progetto basato su Discord.js, Lala.js, Node.js e MongoDB.",
         "chat.target.invalidChannel": "Questo canale non è valido.",
         "chat.target.undefinedChannel": "Questo canale non esiste.",
@@ -62,5 +63,8 @@
         "guild.serverinfo.createdAt": "Data di creazione: ",
         "guild.serverinfo.premiumTier": "Livello boost: ",
         "guild.serverinfo.serverPremiumSubscriptionCount": "Numero dei boost: "
+        "chat.animatedEmoji.unsupportedOperation": "Questa operazione non è supportata, puoi attivare o disattivare le emoji animate con le operazioni \"on\" e \"off\".",
+        "chat.animatedEmoji.enabled": "Le emoji animate sono state attivato.",
+        "chat.animatedEmoji.disabled": "Le emoji animate sono state disattivato."
     }
 }

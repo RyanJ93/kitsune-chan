@@ -71,13 +71,12 @@ class ChatBotController extends BotController {
             'chat.info.users',
             'chat.info.channels',
             'chat.info.server',
-            'chat.info.techs',
             'chat.info.techsText'
         ], this._locale);
         const messageEmbed = new MessageEmbed();
         messageEmbed.setTitle('Kitsune-chan');
         messageEmbed.setDescription(labels['chat.info.description']);
-        messageEmbed.setThumbnail('attachment://icon.png');
+        messageEmbed.setThumbnail('attachment://icon.jpg');
         messageEmbed.addField(labels['chat.info.creator'], 'RyanJ93#7201', true);
         // TODO: Add dynamic version and uptime once upgraded to Lala 0.2.0
         messageEmbed.addField(labels['chat.info.version'], '0.0.1', true);
@@ -85,10 +84,39 @@ class ChatBotController extends BotController {
         messageEmbed.addField(labels['chat.info.users'], entityCounters.users, true);
         messageEmbed.addField(labels['chat.info.channels'], entityCounters.channels, true);
         messageEmbed.addField(labels['chat.info.server'], guildCount, true);
-        messageEmbed.addField(labels['chat.info.techs'], labels['chat.info.techsText']);
-        const iconPath = path.join(__dirname, '..', '..', '..', 'assets', 'icon.png');
-        messageEmbed.attachFiles([new MessageAttachment(iconPath, 'icon.png')]);
+        messageEmbed.setFooter(labels['chat.info.techsText']);
+        const iconPath = path.join(__dirname, '..', '..', '..', 'assets', 'icon.jpg');
+        messageEmbed.attachFiles([new MessageAttachment(iconPath, 'icon.jpg')]);
         await this._message.channel.send(messageEmbed);
+    }
+
+    async animatedEmoji(){
+        const operation = this._message.cleanedContent.trim();
+        const enabled = operation === 'on' ? true : ( operation === 'off' ? false : null );
+        if ( enabled === null ){
+            throw new UsageBotException(LocaleManager.getLabel('chat.animatedEmoji.unsupportedOperation', this._locale), 1);
+        }
+        const chatConfig = await ChatConfig.findOrNew(this._guild.id);
+        await chatConfig.setAnimatedEmojiEnabled(enabled).save();
+        const responseLabelID = enabled ? 'chat.animatedEmoji.enabled' : 'chat.animatedEmoji.disabled';
+        await this._reply(LocaleManager.getLabel(responseLabelID, this._locale));
+    }
+
+    async emojiReact(){
+        const emojiNames = ChatService.extractEmojiNamesFromMessageContent(this._message.cleanedContent);
+        if ( emojiNames.length > 0 ){
+            const chatService = new ChatService(this._guild);
+            let targetMessage;
+            if ( this._message.reference === null ){
+                targetMessage = await ChatService.getPreviousMessage(this._message);
+            }else{
+                targetMessage = await ChatService.getReferencedMessage(this._message);
+            }
+            if ( targetMessage !== null ){
+                await chatService.reactWithEmojis(targetMessage, emojiNames);
+            }
+            await this._message.delete();
+        }
     }
 }
 
