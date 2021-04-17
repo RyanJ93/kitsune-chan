@@ -4,5 +4,6 @@ module.exports = {
     BotController: require('./BotController'),
     ChatBotController: require('./ChatBotController'),
     MemberCountBotController: require('./MemberCountBotController'),
-    UserBotController: require('./UserBotController')
+    UserBotController: require('./UserBotController'),
+    GuildBotController: require('./GuildBotController')
 };

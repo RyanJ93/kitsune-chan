@@ -3,6 +3,7 @@
 const BotController = require('./BotController');
 const LocaleManager = require('../../support/LocaleManager');
 const MemberCountCounterSet = require('../../models/MemberCountCounterSet');
+const UsageBotException = require('../../exceptions/UsageBotException');
 const DateUtils = require('../../support/DateUtils');
 const { MessageEmbed } = require('discord.js');
 
@@ -35,6 +36,15 @@ class GuildBotController extends BotController {
         messageEmbed.addField(labels['guild.serverinfo.emojiCount'], '-', true);
         messageEmbed.addField(labels['guild.serverinfo.createdAt'], "```" + createdAt + "```", false);
         this._channel.send(messageEmbed);
+    }
+
+    async prefix(){
+        const prefix = this._message.cleanedContent.trim();
+        if ( prefix === '' || prefix.indexOf(' ') >= 0 || prefix.length > 10 ){
+            throw new UsageBotException(LocaleManager.getLabel('guild.prefix.invalidPrefix', this._locale));
+        }
+        await this._guildConfig.setPrefix(prefix).save();
+        await this._reply(LocaleManager.getLabel('guild.prefix.prefixChanged', this._locale));
     }
 }
 
