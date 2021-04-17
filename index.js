@@ -12,7 +12,8 @@ lala.init({
         providers.bot.BotProvider,
         providers.bot.ChatProvider,
         providers.bot.UserProvider,
-        providers.bot.MemberCountProvider
+        providers.bot.MemberCountProvider,
+        providers.bot.GuildProvider
     ]
 }).then(() => {
     console.log('Sono pronta!');
