@@ -9,10 +9,13 @@ const LocaleManager = require('../../support/LocaleManager');
 class GuildProvider extends lala.Provider {
     static async setup(){
         const labels = LocaleManager.getLabelTranslationsMulti([
-            'help.guild.serverinfo'
+            'help.guild.serverinfo',
+            'help.guild.prefix'
         ]);
         CommandRouter.registerCommand('serverinfo', GuildBotController, 'serverinfo');
         HelpService.registerCommand('serverinfo', 'Guild', labels['help.guild.serverinfo']);
+        CommandRouter.registerCommand('prefix', GuildBotController, 'prefix');
+        HelpService.registerCommand('prefix', 'Guild', labels['help.guild.prefix']);
     }
 }
 

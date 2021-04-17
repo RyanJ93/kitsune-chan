@@ -20,6 +20,7 @@
         "help.guild.serverinfo": "Displays server related information.",
         "help.chat.animatedEmoji": "Enables or disables animated emojis for non-premium users.",
         "help.chat.emojiReact": "Reacts with one or more static or animated emoji to the previous message or the one this message is referred to.",
+        "help.guild.prefix": "Changes the prefix used to invoke bot commands.",
         "chat.help.commandNotFound": "I'm sorry, this command doesn't exist.",
         "user.userinfo.description": "All user information",
         "user.userinfo.userID": "User ID",
@@ -64,6 +65,8 @@
         "guild.serverinfo.premiumTier": "Boost level: ",
         "chat.animatedEmoji.unsupportedOperation": "This operation is not supported, you can enable or disable animated emojis by using the \"on\" and \"off\" operations.",
         "chat.animatedEmoji.enabled": "Animated emoji has been enabled.",
-        "chat.animatedEmoji.disabled": "Animated emoji has been disabled."
+        "chat.animatedEmoji.disabled": "Animated emoji has been disabled.",
+        "guild.prefix.invalidPrefix": "Invalid prefix: prefix must be a non-empty string lower or equal to 10 characters and without white spaces in it.",
+        "guild.prefix.prefixChanged": "Prefix has been updated!"
     }
 }

@@ -5,11 +5,40 @@ const LocaleManager = require('../../support/LocaleManager');
 const ChatService = require('../../services/ChatService');
 
 class BotController {
+    /**
+     * @type {?module:"discord.js".Client}
+     * @protected
+     */
     _client = null;
+
+    /**
+     * @type {?module:"discord.js".Guild}
+     * @protected
+     */
     _guild = null;
+
+    /**
+     * @type {?module:"discord.js".TextChannel}
+     * @protected
+     */
     _channel = null;
+
+    /**
+     * @type {?GuildConfig}
+     * @protected
+     */
     _guildConfig = null;
+
+    /**
+     * @type {?module:"discord.js".Message}
+     * @protected
+     */
     _message = null;
+
+    /**
+     * @type {?string}
+     * @protected
+     */
     _locale =  null;
 
     _reply(message){
