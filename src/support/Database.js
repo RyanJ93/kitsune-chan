@@ -18,7 +18,8 @@ class Database {
         await Promise.all([
             Database._connection.collection('guildsConfig').createIndex({ guildID: 1 }, { unique: true }),
             Database._connection.collection('memberCountConfig').createIndex({ guildID: 1 }, { unique: true }),
-            Database._connection.collection('memberCountCounterSet').createIndex({ guildID: 1 }, { unique: true })
+            Database._connection.collection('memberCountCounterSet').createIndex({ guildID: 1 }, { unique: true }),
+            Database._connection.collection('chatConfig').createIndex({ guildID: 1 }, { unique: true })
         ]);
     }
 
