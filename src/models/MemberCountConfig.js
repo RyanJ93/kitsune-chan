@@ -5,20 +5,6 @@ const Model = require('./Model');
 const Database = require('../support/Database');
 
 class MemberCountConfig extends Model {
-    #guildID = null;
-    #memberCounterName = MemberCountConfig.DEFAULT_MEMBER_COUNTER_NAME;
-    #userCounterName = MemberCountConfig.DEFAULT_USER_COUNTER_NAME;
-    #textChannelCounterName = MemberCountConfig.DEFAULT_TEXT_CHANNEL_COUNTER_NAME;
-    #voiceChannelCounterName = MemberCountConfig.DEFAULT_VOICE_CHANNEL_COUNTER_NAME;
-    #channelCounterName = MemberCountConfig.DEFAULT_CHANNEL_COUNTER_NAME;
-    #botCounterName = MemberCountConfig.DEFAULT_BOT_COUNTER_NAME;
-    #memberCounterEnabled = false;
-    #userCounterEnabled = false;
-    #textChannelCounterEnabled = false;
-    #voiceChannelCounterEnabled = false;
-    #channelCounterEnabled = false;
-    #botCounterEnabled = false;
-
     static async find(guildID){
         if ( guildID === '' || typeof guildID !== 'string' ){
             throw new lala.InvalidArgumentException('Invalid guild ID.', 1);
@@ -44,6 +30,28 @@ class MemberCountConfig extends Model {
         }
         return memberCountConfig;
     }
+
+    #guildID = null;
+    #memberCounterName = MemberCountConfig.DEFAULT_MEMBER_COUNTER_NAME;
+    #userCounterName = MemberCountConfig.DEFAULT_USER_COUNTER_NAME;
+    #textChannelCounterName = MemberCountConfig.DEFAULT_TEXT_CHANNEL_COUNTER_NAME;
+    #voiceChannelCounterName = MemberCountConfig.DEFAULT_VOICE_CHANNEL_COUNTER_NAME;
+    #channelCounterName = MemberCountConfig.DEFAULT_CHANNEL_COUNTER_NAME;
+    #botCounterName = MemberCountConfig.DEFAULT_BOT_COUNTER_NAME;
+    #staticEmojiCounterName = MemberCountConfig.DEFAULT_STATIC_EMOJI_COUNTER_NAME;
+    #animatedEmojiCounterName = MemberCountConfig.DEFAULT_ANIMATED_EMOJI_COUNTER_NAME;
+    #emojiCounterName = MemberCountConfig.DEFAULT_EMOJI_COUNTER_NAME;
+    #roleCounterName = MemberCountConfig.DEFAULT_ROLE_COUNTER_NAME;
+    #memberCounterEnabled = false;
+    #userCounterEnabled = false;
+    #textChannelCounterEnabled = false;
+    #voiceChannelCounterEnabled = false;
+    #channelCounterEnabled = false;
+    #botCounterEnabled = false;
+    #staticEmojiCounterEnabled = false;
+    #animatedEmojiCounterEnabled = false;
+    #emojiCounterEnabled = false;
+    #roleCounterEnabled = false;
 
     constructor(guildID){
         super();
@@ -135,6 +143,54 @@ class MemberCountConfig extends Model {
         return this.#botCounterName;
     }
 
+    setStaticEmojiCounterName(staticEmojiCounterName){
+        if ( staticEmojiCounterName === '' || typeof staticEmojiCounterName !== 'string' ){
+            throw new lala.InvalidArgumentException('Invalid counter name.', 1);
+        }
+        this.#staticEmojiCounterName = staticEmojiCounterName;
+        return this;
+    }
+
+    getStaticEmojiCounterName(){
+        return this.#staticEmojiCounterName;
+    }
+
+    setAnimatedEmojiCounterName(animatedEmojiCounterName){
+        if ( animatedEmojiCounterName === '' || typeof animatedEmojiCounterName !== 'string' ){
+            throw new lala.InvalidArgumentException('Invalid counter name.', 1);
+        }
+        this.#animatedEmojiCounterName = animatedEmojiCounterName;
+        return this;
+    }
+
+    getAnimatedEmojiCounterName(){
+        return this.#animatedEmojiCounterName;
+    }
+
+    setEmojiCounterName(emojiCounterName){
+        if ( emojiCounterName === '' || typeof emojiCounterName !== 'string' ){
+            throw new lala.InvalidArgumentException('Invalid counter name.', 1);
+        }
+        this.#emojiCounterName = emojiCounterName;
+        return this;
+    }
+
+    getEmojiCounterName(){
+        return this.#emojiCounterName;
+    }
+
+    setRoleCounterName(roleCounterName){
+        if ( roleCounterName === '' || typeof roleCounterName !== 'string' ){
+            throw new lala.InvalidArgumentException('Invalid counter name.', 1);
+        }
+        this.#roleCounterName = roleCounterName;
+        return this;
+    }
+
+    getRoleCounterName(){
+        return this.#roleCounterName;
+    }
+
     setMemberCounterEnabled(memberCounterEnabled){
         this.#memberCounterEnabled = memberCounterEnabled === true;
         return this;
@@ -189,6 +245,42 @@ class MemberCountConfig extends Model {
         return this.#botCounterEnabled;
     }
 
+    setStaticEmojiCounterEnabled(staticEmojiCounterEnabled){
+        this.#staticEmojiCounterEnabled = staticEmojiCounterEnabled === true;
+        return this;
+    }
+
+    getStaticEmojiCounterEnabled(){
+        return this.#staticEmojiCounterEnabled;
+    }
+
+    setAnimatedEmojiCounterEnabled(animatedEmojiCounterEnabled){
+        this.#animatedEmojiCounterEnabled = animatedEmojiCounterEnabled === true;
+        return this;
+    }
+
+    getAnimatedEmojiCounterEnabled(){
+        return this.#animatedEmojiCounterEnabled;
+    }
+
+    setEmojiCounterEnabled(emojiCounterEnabled){
+        this.#emojiCounterEnabled = emojiCounterEnabled === true;
+        return this;
+    }
+
+    getEmojiCounterEnabled(){
+        return this.#emojiCounterEnabled;
+    }
+
+    setRoleCounterEnabled(roleCounterEnabled){
+        this.#roleCounterEnabled = roleCounterEnabled === true;
+        return this;
+    }
+
+    getRoleCounterEnabled(){
+        return this.#roleCounterEnabled;
+    }
+
     setProperties(properties){
         if ( properties.hasOwnProperty('guildID') ){
             this.setGuildID(properties.guildID);
@@ -211,6 +303,18 @@ class MemberCountConfig extends Model {
         if ( properties.hasOwnProperty('botCounterName') ){
             this.setBotCounterName(properties.botCounterName);
         }
+        if ( properties.hasOwnProperty('staticEmojiCounterName') ){
+            this.setStaticEmojiCounterName(properties.staticEmojiCounterName);
+        }
+        if ( properties.hasOwnProperty('animatedEmojiCounterName') ){
+            this.setAnimatedEmojiCounterName(properties.animatedEmojiCounterName);
+        }
+        if ( properties.hasOwnProperty('emojiCounterName') ){
+            this.setEmojiCounterName(properties.emojiCounterName);
+        }
+        if ( properties.hasOwnProperty('roleCounterName') ){
+            this.setRoleCounterName(properties.roleCounterName);
+        }
         if ( properties.hasOwnProperty('memberCounterEnabled') ){
             this.setMemberCounterEnabled(properties.memberCounterEnabled);
         }
@@ -229,6 +333,18 @@ class MemberCountConfig extends Model {
         if ( properties.hasOwnProperty('botCounterEnabled') ){
             this.setBotCounterEnabled(properties.botCounterEnabled);
         }
+        if ( properties.hasOwnProperty('staticEmojiCounterEnabled') ){
+            this.setStaticEmojiCounterEnabled(properties.staticEmojiCounterEnabled);
+        }
+        if ( properties.hasOwnProperty('animatedEmojiCounterEnabled') ){
+            this.setAnimatedEmojiCounterEnabled(properties.animatedEmojiCounterEnabled);
+        }
+        if ( properties.hasOwnProperty('emojiCounterEnabled') ){
+            this.setEmojiCounterEnabled(properties.emojiCounterEnabled);
+        }
+        if ( properties.hasOwnProperty('roleCounterEnabled') ){
+            this.setRoleCounterEnabled(properties.roleCounterEnabled);
+        }
         return this;
     }
 
@@ -241,12 +357,20 @@ class MemberCountConfig extends Model {
             voiceChannelCounterName: this.#voiceChannelCounterName,
             channelCounterName: this.#channelCounterName,
             botCounterName: this.#botCounterName,
+            staticEmojiCounterName: this.#staticEmojiCounterName,
+            animatedEmojiCounterName: this.#animatedEmojiCounterName,
+            emojiCounterName: this.#emojiCounterName,
+            roleCounterName: this.#roleCounterName,
             memberCounterEnabled: this.#memberCounterEnabled,
             userCounterEnabled: this.#userCounterEnabled,
             channelCounterEnabled: this.#channelCounterEnabled,
             textChannelCounterEnabled: this.#textChannelCounterEnabled,
             voiceChannelCounterEnabled: this.#voiceChannelCounterEnabled,
-            botCounterEnabled: this.#botCounterEnabled
+            botCounterEnabled: this.#botCounterEnabled,
+            staticEmojiCounterEnabled: this.#staticEmojiCounterEnabled,
+            animatedEmojiCounterEnabled: this.#animatedEmojiCounterEnabled,
+            emojiCounterEnabled: this.#emojiCounterEnabled,
+            roleCounterEnabled: this.#roleCounterEnabled
         };
     }
 
@@ -296,6 +420,26 @@ Object.defineProperty(MemberCountConfig, 'DEFAULT_CHANNEL_COUNTER_NAME', {
 
 Object.defineProperty(MemberCountConfig, 'DEFAULT_BOT_COUNTER_NAME', {
     value: 'Bot count',
+    writable: false
+});
+
+Object.defineProperty(MemberCountConfig, 'DEFAULT_STATIC_EMOJI_COUNTER_NAME', {
+    value: 'Static emoji count',
+    writable: false
+});
+
+Object.defineProperty(MemberCountConfig, 'DEFAULT_ANIMATED_EMOJI_COUNTER_NAME', {
+    value: 'Animated emoji count',
+    writable: false
+});
+
+Object.defineProperty(MemberCountConfig, 'DEFAULT_EMOJI_COUNTER_NAME', {
+    value: 'Emoji count',
+    writable: false
+});
+
+Object.defineProperty(MemberCountConfig, 'DEFAULT_ROLE_COUNTER_NAME', {
+    value: 'Role count',
     writable: false
 });
 

@@ -5,6 +5,18 @@ const lala = require('@lala.js/core');
 const MemberCountCounterSet = require('../models/MemberCountCounterSet');
 const MemberCountConfig = require('../models/MemberCountConfig');
 
+/**
+ * @typedef {Object} CounterSet
+ *
+ * @property {number} users
+ * @property {number} bots
+ * @property {number} textChannels
+ * @property {number} voiceChannels
+ * @property {number} staticEmojis
+ * @property {number} animatedEmojis
+ * @property {number} roles
+ */
+
 class MemberCountService extends lala.Service {
     /**
      *
@@ -34,7 +46,12 @@ class MemberCountService extends lala.Service {
      * @returns {boolean}
      */
     static isSupportedChannel(channel){
-        return ['members', 'users', 'text-channels', 'voice-channels', 'channels', 'bots'].indexOf(channel) !== -1;
+        return [
+            'members', 'users', 'bots', 'member', 'user', 'bot',
+            'text-channels', 'voice-channels', 'channels', 'text-channel', 'voice-channel', 'channel',
+            'static-emojis', 'animated-emojis', 'emojis', 'static-emoji', 'animated-emoji', 'emoji',
+            'roles', 'role'
+        ].indexOf(channel) !== -1;
     }
 
     /**
@@ -48,7 +65,7 @@ class MemberCountService extends lala.Service {
         for ( const [guildID, guild] of client.guilds.cache ){
             processes.push(new Promise((resolve, reject) => {
                 const memberCountService = new MemberCountService(guild);
-                memberCountService.refreshCounters(true, true).then(() => {
+                memberCountService.refreshCounters(true, true, true, true).then(() => {
                     resolve();
                 }).catch((ex) => {
                     reject(ex);
@@ -66,7 +83,7 @@ class MemberCountService extends lala.Service {
      */
     static triggerMembersCountRefresh(member){
         const memberCountService = new MemberCountService(member.guild);
-        return memberCountService.refreshCounters(true, false);
+        return memberCountService.refreshCounters(true, false, false, false);
     }
 
     /**
@@ -79,8 +96,30 @@ class MemberCountService extends lala.Service {
         const shouldBeIgnored = await MemberCountService.#channelShouldBeIgnored(channel);
         if ( !shouldBeIgnored ){
             const memberCountService = new MemberCountService(channel.guild);
-            await memberCountService.refreshCounters(false, true);
+            await memberCountService.refreshCounters(false, true, false, false);
         }
+    }
+
+    /**
+     *
+     * @param {module:"discord.js".GuildEmoji} emoji
+     *
+     * @returns {Promise<void>}
+     */
+    static async triggerEmojisCountRefresh(emoji){
+        const memberCountService = new MemberCountService(emoji.guild);
+        return memberCountService.refreshCounters(false, false, true, false);
+    }
+
+    /**
+     *
+     * @param {module:"discord.js".Role} role
+     *
+     * @returns {Promise<void>}
+     */
+    static async triggerRolesCountRefresh(role){
+        const memberCountService = new MemberCountService(role.guild);
+        return memberCountService.refreshCounters(false, false, false, true);
     }
 
     /**
@@ -99,6 +138,18 @@ class MemberCountService extends lala.Service {
         });
         client.on('channelDelete', (channel) => {
             MemberCountService.triggerChannelsCountRefresh(channel);
+        });
+        client.on('emojiCreate', (emoji) => {
+            MemberCountService.triggerEmojisCountRefresh(emoji);
+        });
+        client.on('emojiDelete', (emoji) => {
+            MemberCountService.triggerEmojisCountRefresh(emoji);
+        });
+        client.on('roleCreate', (role) => {
+            MemberCountService.triggerRolesCountRefresh(role);
+        });
+        client.on('roleDelete', (role) => {
+            MemberCountService.triggerRolesCountRefresh(role);
         });
     }
 
@@ -121,7 +172,7 @@ class MemberCountService extends lala.Service {
      *
      * @param {string} fullChannelName
      *
-     * @returns {Promise<module:"discord.js".Channel>}
+     * @returns {Promise<module:"discord.js".VoiceChannel>}
      */
     async #createCounterChannel(fullChannelName){
         const transactionCache = lala.CacheRepository.get('transactionCache');
@@ -299,17 +350,121 @@ class MemberCountService extends lala.Service {
 
     /**
      *
-     * @returns {Promise<{bots: number, textChannels: number, voiceChannels: number, users: number}>}
+     * @returns {Promise<boolean>}
+     */
+    async #updateStaticEmojiCounterChannel(){
+        let shouldBeSaved = false;
+        if ( this.#memberCountConfig.getStaticEmojiCounterEnabled() ){
+            const fullChannelName = this.#memberCountConfig.getStaticEmojiCounterName() + ': ' + this.#memberCountCounterSet.getStaticEmojiCount();
+            const channel = await this.#guild.channels.resolve(this.#memberCountCounterSet.getStaticEmojiCounterChannelID());
+            if ( channel === null ){
+                const channel = await this.#createCounterChannel(fullChannelName);
+                this.#memberCountCounterSet.setStaticEmojiCounterChannelID(channel.id);
+                shouldBeSaved = true;
+            }else if ( channel.name !== fullChannelName ){
+                await channel.setName(fullChannelName);
+            }
+        }else if ( this.#memberCountCounterSet.getStaticEmojiCounterChannelID() !== null ){
+            const channel = await this.#guild.channels.resolve(this.#memberCountCounterSet.getStaticEmojiCounterChannelID());
+            if ( channel !== null ){
+                await channel.delete();
+                this.#memberCountCounterSet.setStaticEmojiCounterChannelID(null);
+                shouldBeSaved = true;
+            }
+        }
+        return shouldBeSaved;
+    }
+
+    /**
+     *
+     * @returns {Promise<boolean>}
+     */
+    async #updateAnimatedEmojiCounterChannel(){
+        let shouldBeSaved = false;
+        if ( this.#memberCountConfig.getAnimatedEmojiCounterEnabled() ){
+            const fullChannelName = this.#memberCountConfig.getAnimatedEmojiCounterName() + ': ' + this.#memberCountCounterSet.getAnimatedEmojiCount();
+            const channel = await this.#guild.channels.resolve(this.#memberCountCounterSet.getAnimatedEmojiCounterChannelID());
+            if ( channel === null ){
+                const channel = await this.#createCounterChannel(fullChannelName);
+                this.#memberCountCounterSet.setAnimatedEmojiCounterChannelID(channel.id);
+                shouldBeSaved = true;
+            }else if ( channel.name !== fullChannelName ){
+                await channel.setName(fullChannelName);
+            }
+        }else if ( this.#memberCountCounterSet.getAnimatedEmojiCounterChannelID() !== null ){
+            const channel = await this.#guild.channels.resolve(this.#memberCountCounterSet.getAnimatedEmojiCounterChannelID());
+            if ( channel !== null ){
+                await channel.delete();
+                this.#memberCountCounterSet.setAnimatedEmojiCounterChannelID(null);
+                shouldBeSaved = true;
+            }
+        }
+        return shouldBeSaved;
+    }
+
+    /**
+     *
+     * @returns {Promise<boolean>}
+     */
+    async #updateEmojiCounterChannel(){
+        let shouldBeSaved = false;
+        if ( this.#memberCountConfig.getEmojiCounterEnabled() ){
+            const fullChannelName = this.#memberCountConfig.getEmojiCounterName() + ': ' + this.#memberCountCounterSet.getEmojiCount();
+            const channel = await this.#guild.channels.resolve(this.#memberCountCounterSet.getEmojiCounterChannelID());
+            if ( channel === null ){
+                const channel = await this.#createCounterChannel(fullChannelName);
+                this.#memberCountCounterSet.setEmojiCounterChannelID(channel.id);
+                shouldBeSaved = true;
+            }else if ( channel.name !== fullChannelName ){
+                await channel.setName(fullChannelName);
+            }
+        }else if ( this.#memberCountCounterSet.getEmojiCounterChannelID() !== null ){
+            const channel = await this.#guild.channels.resolve(this.#memberCountCounterSet.getEmojiCounterChannelID());
+            if ( channel !== null ){
+                await channel.delete();
+                this.#memberCountCounterSet.setEmojiCounterChannelID(null);
+                shouldBeSaved = true;
+            }
+        }
+        return shouldBeSaved;
+    }
+
+    /**
+     *
+     * @returns {Promise<boolean>}
+     */
+    async #updateRoleCounterChannel(){
+        let shouldBeSaved = false;
+        if ( this.#memberCountConfig.getRoleCounterEnabled() ){
+            const fullChannelName = this.#memberCountConfig.getRoleCounterName() + ': ' + this.#memberCountCounterSet.getRoleCount();
+            const channel = await this.#guild.channels.resolve(this.#memberCountCounterSet.getRoleCounterChannelID());
+            if ( channel === null ){
+                const channel = await this.#createCounterChannel(fullChannelName);
+                this.#memberCountCounterSet.setRoleCounterChannelID(channel.id);
+                shouldBeSaved = true;
+            }else if ( channel.name !== fullChannelName ){
+                await channel.setName(fullChannelName);
+            }
+        }else if ( this.#memberCountCounterSet.getRoleCounterChannelID() !== null ){
+            const channel = await this.#guild.channels.resolve(this.#memberCountCounterSet.getRoleCounterChannelID());
+            if ( channel !== null ){
+                await channel.delete();
+                this.#memberCountCounterSet.setRoleCounterChannelID(null);
+                shouldBeSaved = true;
+            }
+        }
+        return shouldBeSaved;
+    }
+
+    /**
+     *
+     * @returns {Promise<CounterSet>}
      */
     async #countGuildEntities(){
-        const counters = {users: 0, bots: 0, textChannels: 0, voiceChannels: 0};
+        const counters = {users: 0, bots: 0, textChannels: 0, voiceChannels: 0, staticEmojis: 0, animatedEmojis: 0, roles: 0};
         const members = await this.#guild.members.fetch();
         members.forEach((member) => {
-            if ( member.user.bot ){
-                counters.bots++;
-            }else{
-                counters.users++;
-            }
+            counters[member.user.bot ? 'bots' : 'users']++;
         });
         const ignoredChannelIDs = Object.values(this.#memberCountCounterSet.getChannelIDs());
         for ( const [channelID, channel] of this.#guild.channels.cache ){
@@ -321,6 +476,11 @@ class MemberCountService extends lala.Service {
                 }
             }
         }
+        for ( const [emojiID, emoji] of this.#guild.emojis.cache ){
+            counters[emoji.animated ? 'animatedEmojis' : 'staticEmojis']++;
+        }
+        const roles = await this.#guild.roles.fetch();
+        counters.roles = roles.cache.size;
         return counters;
     }
 
@@ -335,7 +495,11 @@ class MemberCountService extends lala.Service {
             this.#updateTextChannelCounterChannel(),
             this.#updateVoiceChannelCounterChannel(),
             this.#updateChannelCounterChannel(),
-            this.#updateBotCounterChannel()
+            this.#updateBotCounterChannel(),
+            this.#updateStaticEmojiCounterChannel(),
+            this.#updateAnimatedEmojiCounterChannel(),
+            this.#updateEmojiCounterChannel(),
+            this.#updateRoleCounterChannel()
         ]);
         const shouldBeSaved = results.some((element) => { return element === true });
         if ( shouldBeSaved ){
@@ -374,12 +538,14 @@ class MemberCountService extends lala.Service {
 
     /**
      *
-     * @param {boolean} includeMembers
-     * @param {boolean} includeChannels
+     * @param {boolean} [members=true]
+     * @param {boolean} [channels=true]
+     * @param {boolean} [emojis=true]
+     * @param {boolean} [roles=true]
      *
      * @returns {Promise<void>}
      */
-    async refreshCounters(includeMembers = true, includeChannels = true){
+    async refreshCounters(members = true, channels = true, emojis = true, roles = true){
         if ( this.#memberCountCounterSet === null ){
             this.#memberCountCounterSet = await MemberCountCounterSet.findOrNew(this.#guild.id);
         }
@@ -387,11 +553,17 @@ class MemberCountService extends lala.Service {
             this.#memberCountConfig = await MemberCountConfig.findOrNew(this.#guild.id);
         }
         const counters = await this.#countGuildEntities();
-        if ( includeMembers === true ){
+        if ( members === true ){
             this.#memberCountCounterSet.setUserCount(counters.users).setBotCount(counters.bots);
         }
-        if ( includeChannels === true ){
+        if ( channels === true ){
             this.#memberCountCounterSet.setTextChannelCount(counters.textChannels).setVoiceChannelCount(counters.voiceChannels);
+        }
+        if ( emojis === true ){
+            this.#memberCountCounterSet.setStaticEmojiCount(counters.staticEmojis).setAnimatedEmojiCount(counters.animatedEmojis);
+        }
+        if ( roles === true ){
+            this.#memberCountCounterSet.setRoleCount(counters.roles);
         }
         await Promise.all([
             this.#updateCounterChannels(),
@@ -411,23 +583,45 @@ class MemberCountService extends lala.Service {
             this.#memberCountConfig = await MemberCountConfig.findOrNew(this.#guild.id);
         }
         switch ( counter ){
-            case 'members': {
+            case 'members':
+            case 'member': {
                 this.#memberCountConfig.setMemberCounterEnabled(enabled);
             }break;
-            case 'users': {
+            case 'users':
+            case 'user': {
                 this.#memberCountConfig.setUserCounterEnabled(enabled);
             }break;
-            case 'text-channels': {
+            case 'text-channels':
+            case 'text-channel': {
                 this.#memberCountConfig.setTextChannelCounterEnabled(enabled);
             }break;
-            case 'voice-channels': {
+            case 'voice-channels':
+            case 'voice-channel': {
                 this.#memberCountConfig.setVoiceChannelCounterEnabled(enabled);
             }break;
-            case 'channels': {
+            case 'channels':
+            case 'channel': {
                 this.#memberCountConfig.setChannelCounterEnabled(enabled);
             }break;
-            case 'bots': {
+            case 'bots':
+            case 'bot': {
                 this.#memberCountConfig.setBotCounterEnabled(enabled);
+            }break;
+            case 'static-emojis':
+            case 'static-emoji': {
+                this.#memberCountConfig.setStaticEmojiCounterEnabled(enabled);
+            }break;
+            case 'animated-emojis':
+            case 'animated-emoji': {
+                this.#memberCountConfig.setAnimatedEmojiCounterEnabled(enabled);
+            }break;
+            case 'emojis':
+            case 'emoji': {
+                this.#memberCountConfig.setEmojiCounterEnabled(enabled);
+            }break;
+            case 'roles':
+            case 'role': {
+                this.#memberCountConfig.setRoleCounterEnabled(enabled);
             }break;
             default: {
                 throw new lala.InvalidArgumentException('Invalid counter type.', 1);
@@ -451,23 +645,45 @@ class MemberCountService extends lala.Service {
             this.#memberCountConfig = await MemberCountConfig.findOrNew(this.#guild.id);
         }
         switch ( counter ){
-            case 'members': {
+            case 'members':
+            case 'member': {
                 this.#memberCountConfig.setMemberCounterName(name);
             }break;
-            case 'users': {
+            case 'users':
+            case 'user': {
                 this.#memberCountConfig.setUserCounterName(name);
             }break;
-            case 'text-channels': {
+            case 'text-channels':
+            case 'text-channel': {
                 this.#memberCountConfig.setTextChannelCounterName(name);
             }break;
-            case 'voice-channels': {
+            case 'voice-channels':
+            case 'voice-channel': {
                 this.#memberCountConfig.setVoiceChannelCounterName(name);
             }break;
-            case 'channels': {
+            case 'channels':
+            case 'channel': {
                 this.#memberCountConfig.setChannelCounterName(name);
             }break;
-            case 'bots': {
+            case 'bots':
+            case 'bot': {
                 this.#memberCountConfig.setBotCounterName(name);
+            }break;
+            case 'static-emojis':
+            case 'static-emoji': {
+                this.#memberCountConfig.setStaticEmojiCounterName(name);
+            }break;
+            case 'animated-emojis':
+            case 'animated-emoji': {
+                this.#memberCountConfig.setAnimatedEmojiCounterName(name);
+            }break;
+            case 'emojis':
+            case 'emoji': {
+                this.#memberCountConfig.setEmojiCounterName(name);
+            }break;
+            case 'roles':
+            case 'role': {
+                this.#memberCountConfig.setRoleCounterName(name);
             }break;
             default: {
                 throw new lala.InvalidArgumentException('Invalid counter type.', 1);
