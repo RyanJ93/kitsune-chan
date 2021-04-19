@@ -5,18 +5,6 @@ const Model = require('./Model');
 const Database = require('../support/Database');
 
 class MemberCountCounterSet extends Model {
-    #guildID = null;
-    #userCount = 0;
-    #textChannelCount = 0;
-    #voiceChannelCount = 0;
-    #botCount = 0;
-    #memberCounterChannelID = null;
-    #userCounterChannelID = null;
-    #textChannelCounterChannelID = null;
-    #voiceChannelCounterChannelID = null;
-    #channelCounterChannelID = null;
-    #botCounterChannelID = null;
-    
     static async find(guildID){
         if ( guildID === '' || typeof guildID !== 'string' ){
             throw new lala.InvalidArgumentException('Invalid guild ID.', 1);
@@ -56,6 +44,25 @@ class MemberCountCounterSet extends Model {
             channels: ( counters[0].textChannels + counters[0].voiceChannels )
         };
     }
+
+    #guildID = null;
+    #userCount = 0;
+    #textChannelCount = 0;
+    #voiceChannelCount = 0;
+    #botCount = 0;
+    #staticEmojiCount = 0;
+    #animatedEmojiCount = 0;
+    #roleCount = 0;
+    #memberCounterChannelID = null;
+    #userCounterChannelID = null;
+    #textChannelCounterChannelID = null;
+    #voiceChannelCounterChannelID = null;
+    #channelCounterChannelID = null;
+    #botCounterChannelID = null;
+    #staticEmojiCounterChannelID = null;
+    #animatedEmojiCounterChannelID = null;
+    #emojiCounterChannelID = null;
+    #roleCounterChannelID = null;
 
     constructor(guildID){
         super();
@@ -123,12 +130,52 @@ class MemberCountCounterSet extends Model {
         return this.#botCount;
     }
 
+    setStaticEmojiCount(staticEmojiCount){
+        if ( staticEmojiCount === null || isNaN(staticEmojiCount) || staticEmojiCount < 0 ){
+            throw new lala.InvalidArgumentException('Invalid counter value.', 1);
+        }
+        this.#staticEmojiCount = Math.floor(staticEmojiCount);
+        return this;
+    }
+
+    getStaticEmojiCount(){
+        return this.#staticEmojiCount;
+    }
+
+    setAnimatedEmojiCount(animatedEmojiCount){
+        if ( animatedEmojiCount === null || isNaN(animatedEmojiCount) || animatedEmojiCount < 0 ){
+            throw new lala.InvalidArgumentException('Invalid counter value.', 1);
+        }
+        this.#animatedEmojiCount = Math.floor(animatedEmojiCount);
+        return this;
+    }
+
+    getAnimatedEmojiCount(){
+        return this.#animatedEmojiCount;
+    }
+
+    setRoleCount(roleCount){
+        if ( roleCount === null || isNaN(roleCount) || roleCount < 0 ){
+            throw new lala.InvalidArgumentException('Invalid counter value.', 1);
+        }
+        this.#roleCount = Math.floor(roleCount);
+        return this;
+    }
+
+    getRoleCount(){
+        return this.#roleCount;
+    }
+
     getMemberCount(){
         return this.#userCount + this.#botCount;
     }
 
     getChannelCount(){
         return this.#textChannelCount + this.#voiceChannelCount;
+    }
+
+    getEmojiCount(){
+        return this.#staticEmojiCount + this.#animatedEmojiCount;
     }
 
     setMemberCounterChannelID(memberCounterChannelID){
@@ -203,6 +250,54 @@ class MemberCountCounterSet extends Model {
         return this.#botCounterChannelID;
     }
 
+    setStaticEmojiCounterChannelID(staticEmojiCounterChannelID){
+        if ( staticEmojiCounterChannelID !== null && ( staticEmojiCounterChannelID === '' || typeof staticEmojiCounterChannelID !== 'string' ) ){
+            throw new lala.InvalidArgumentException('Invalid channel ID.', 1);
+        }
+        this.#staticEmojiCounterChannelID = staticEmojiCounterChannelID;
+        return this;
+    }
+
+    getStaticEmojiCounterChannelID(){
+        return this.#staticEmojiCounterChannelID;
+    }
+
+    setAnimatedEmojiCounterChannelID(animatedEmojiCounterChannelID){
+        if ( animatedEmojiCounterChannelID !== null && ( animatedEmojiCounterChannelID === '' || typeof animatedEmojiCounterChannelID !== 'string' ) ){
+            throw new lala.InvalidArgumentException('Invalid channel ID.', 1);
+        }
+        this.#animatedEmojiCounterChannelID = animatedEmojiCounterChannelID;
+        return this;
+    }
+
+    getAnimatedEmojiCounterChannelID(){
+        return this.#animatedEmojiCounterChannelID;
+    }
+
+    setEmojiCounterChannelID(emojiCounterChannelID){
+        if ( emojiCounterChannelID !== null && ( emojiCounterChannelID === '' || typeof emojiCounterChannelID !== 'string' ) ){
+            throw new lala.InvalidArgumentException('Invalid channel ID.', 1);
+        }
+        this.#emojiCounterChannelID = emojiCounterChannelID;
+        return this;
+    }
+
+    getEmojiCounterChannelID(){
+        return this.#emojiCounterChannelID;
+    }
+
+    setRoleCounterChannelID(roleCounterChannelID){
+        if ( roleCounterChannelID !== null && ( roleCounterChannelID === '' || typeof roleCounterChannelID !== 'string' ) ){
+            throw new lala.InvalidArgumentException('Invalid channel ID.', 1);
+        }
+        this.#roleCounterChannelID = roleCounterChannelID;
+        return this;
+    }
+
+    getRoleCounterChannelID(){
+        return this.#roleCounterChannelID;
+    }
+
     setProperties(properties){
         if ( properties.hasOwnProperty('guildID') ){
             this.setGuildID(properties.guildID);
@@ -218,6 +313,15 @@ class MemberCountCounterSet extends Model {
         }
         if ( properties.hasOwnProperty('botCount') ){
             this.setBotCount(properties.botCount);
+        }
+        if ( properties.hasOwnProperty('staticEmojiCount') ){
+            this.setStaticEmojiCount(properties.staticEmojiCount);
+        }
+        if ( properties.hasOwnProperty('animatedEmojiCount') ){
+            this.setAnimatedEmojiCount(properties.animatedEmojiCount);
+        }
+        if ( properties.hasOwnProperty('roleCount') ){
+            this.setRoleCount(properties.roleCount);
         }
         if ( properties.hasOwnProperty('memberCounterChannelID') ){
             this.setMemberCounterChannelID(properties.memberCounterChannelID);
@@ -237,6 +341,18 @@ class MemberCountCounterSet extends Model {
         if ( properties.hasOwnProperty('botCounterChannelID') ){
             this.setBotCounterChannelID(properties.botCounterChannelID);
         }
+        if ( properties.hasOwnProperty('staticEmojiCounterChannelID') ){
+            this.setStaticEmojiCounterChannelID(properties.staticEmojiCounterChannelID);
+        }
+        if ( properties.hasOwnProperty('animatedEmojiCounterChannelID') ){
+            this.setAnimatedEmojiCounterChannelID(properties.animatedEmojiCounterChannelID);
+        }
+        if ( properties.hasOwnProperty('emojiCounterChannelID') ){
+            this.setEmojiCounterChannelID(properties.emojiCounterChannelID);
+        }
+        if ( properties.hasOwnProperty('roleCounterChannelID') ){
+            this.setRoleCounterChannelID(properties.roleCounterChannelID);
+        }
         return this;
     }
 
@@ -245,14 +361,21 @@ class MemberCountCounterSet extends Model {
             guildID: this.#guildID,
             textChannelCount: this.#textChannelCount,
             voiceChannelCount: this.#voiceChannelCount,
-            botCount: this.#botCount,
             userCount: this.#userCount,
+            botCount: this.#botCount,
+            staticEmojiCount: this.#staticEmojiCount,
+            animatedEmojiCount: this.#animatedEmojiCount,
+            roleCount: this.#roleCount,
             memberCounterChannelID: this.#memberCounterChannelID,
             userCounterChannelID: this.#userCounterChannelID,
             textChannelCounterChannelID: this.#textChannelCounterChannelID,
             voiceChannelCounterChannelID: this.#voiceChannelCounterChannelID,
             channelCounterChannelID: this.#channelCounterChannelID,
-            botCounterChannelID: this.#botCounterChannelID
+            botCounterChannelID: this.#botCounterChannelID,
+            staticEmojiCounterChannelID: this.#staticEmojiCounterChannelID,
+            animatedEmojiCounterChannelID: this.#animatedEmojiCounterChannelID,
+            emojiCounterChannelID: this.#emojiCounterChannelID,
+            roleCounterChannelID: this.#roleCounterChannelID
         };
     }
 
@@ -263,7 +386,11 @@ class MemberCountCounterSet extends Model {
             textChannelCounterChannelID: this.#textChannelCounterChannelID,
             voiceChannelCounterChannelID: this.#voiceChannelCounterChannelID,
             channelCounterChannelID: this.#channelCounterChannelID,
-            botCounterChannelID: this.#botCounterChannelID
+            botCounterChannelID: this.#botCounterChannelID,
+            staticEmojiCounterChannelID: this.#staticEmojiCounterChannelID,
+            animatedEmojiCounterChannelID: this.#animatedEmojiCounterChannelID,
+            emojiCounterChannelID: this.#emojiCounterChannelID,
+            roleCounterChannelID: this.#roleCounterChannelID
         };
     }
 
